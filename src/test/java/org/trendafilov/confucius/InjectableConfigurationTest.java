@@ -15,7 +15,7 @@ public class InjectableConfigurationTest {
 		InjectableConfiguration config = new InjectableConfiguration();
 		assertFalse(config.keySet().isEmpty());
 	}
-	
+
 	@Test
 	public void testTwoArgsConstructor() throws ConfigurationException {
 		InjectableConfiguration config = new InjectableConfiguration("some-file.cfg", TEST_CONTEXT);

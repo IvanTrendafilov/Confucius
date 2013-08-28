@@ -20,7 +20,7 @@ class Parser {
 	private final static String RIGHT_SUBSTITUTION = "}";
 
 	private final Map<String, String> configuration = new HashMap<>();
-	
+
 	public Parser(String filename, String context) {
 		try {
 			Collection<String> lines = readLines(filename);
@@ -32,11 +32,11 @@ class Parser {
 			throw new RuntimeConfigurationException("Unable to read configuration file", e);
 		}
 	}
-	
+
 	public Map<String, String> getConfiguration() {
 		return configuration;
 	}
-	
+
 	private Collection<String> readLines(String filename) throws IOException {
 		List<String> lines = new ArrayList<>();
 		if (filename == null)
@@ -48,7 +48,7 @@ class Parser {
 		br.close();
 		return lines;
 	}
-	
+
 	private Map<String, String> parseLine(String line) {
 		Map<String, String> pair = new HashMap<>();
 		String newLine = line.trim();
@@ -65,7 +65,7 @@ class Parser {
 			throw new RuntimeConfigurationException(String.format("Unparsable line: [%s]", line));
 		}
 	}
-	
+
 	private void parseNoContext(Collection<String> lines) {
 		boolean hasNoContext = true;
 		for (String line : lines)
@@ -75,7 +75,7 @@ class Parser {
 			for (String line : lines)
 				configuration.putAll(parseLine(line));
 	}
-	
+
 	private void parseContext(Collection<String> lines, String context) {
 		boolean insideContext = false;
 		for (String line : lines) {
@@ -87,7 +87,7 @@ class Parser {
 				configuration.putAll(parseLine(line));
 		}
 	}
-	
+
 	private void substitute() {
 		int previousSize = 0;
 		Map<String, String> unresolved = new HashMap<>();
@@ -106,20 +106,20 @@ class Parser {
 				unresolved.remove(item);
 		}
 	}
-	
+
 	private boolean isContext(String line) {
 		line = line.trim();
 		return line.startsWith(LEFT_CONTEXT) && line.endsWith(RIGHT_CONTEXT);
 	}
-	
+
 	private boolean isNamedContext(String line, String context) {
 		return context != null && line.trim().equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);
 	}
-	
+
 	private boolean isSubstitution(String value) {
 		return value.startsWith(LEFT_SUBSTITUTION) && value.endsWith(RIGHT_SUBSTITUTION);
 	}
-	
+
 	private String getSubstitution(String value) {
 		return value.substring(2, value.length() - 1);
 	}

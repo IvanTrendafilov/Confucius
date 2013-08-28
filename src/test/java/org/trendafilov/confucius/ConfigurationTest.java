@@ -13,12 +13,12 @@ import org.trendafilov.confucius.core.ConfigurationException;
 public class ConfigurationTest {
 	private Configuration config;
 	private final static String TEST_KEY = "testkey1231";
-	
+
 	@Before
 	public void setUp() {
 		config = Configuration.getInstance();
 	}
-	
+
 	@Test
 	public void sanityCheck() {
 		assertFalse(Configuration.getInstance().keySet().isEmpty());
@@ -29,17 +29,17 @@ public class ConfigurationTest {
 		assertFalse(config.getBooleanValue(TEST_KEY, false));
 		assertTrue(config.getBooleanValue(TEST_KEY, true));
 	}
-	
+
 	@Test
 	public void testByteDefaultReturn() {
 		assertEquals((byte) 10, config.getByteValue(TEST_KEY, (byte) 10));
 	}
-	
+
 	@Test
 	public void testCharDefaultReturn() {
 		assertEquals('Z', config.getCharValue(TEST_KEY, 'Z'));
 	}
-	
+
 	@Test
 	public void testDoubleDefaultReturn() {
 		assertEquals(20.0, config.getDoubleValue(TEST_KEY, 20.0), 0.1);
@@ -49,7 +49,7 @@ public class ConfigurationTest {
 	public void testFloatDefaultReturn() {
 		assertEquals(123.0f, config.getFloatValue(TEST_KEY, 123.0f), 0.1);
 	}
-	
+
 	@Test
 	public void testIntDefaultReturn() {
 		assertEquals(123, config.getIntValue(TEST_KEY, 123));
@@ -69,71 +69,71 @@ public class ConfigurationTest {
 	public void testStringDefaultReturn() {
 		assertEquals("some string", config.getStringValue(TEST_KEY, "some string"));
 	}
-	
+
 	@Test
 	public void testBooleanSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, true);
 		assertTrue(config.getBooleanValue(TEST_KEY, false));
 		assertTrue(config.getBooleanValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testByteSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 5);
 		assertEquals((byte) 5, config.getByteValue(TEST_KEY, (byte) 10));
 		assertEquals((byte) 5, config.getByteValue(TEST_KEY));
-	
+
 	}
-	
+
 	@Test
 	public void testCharSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 'A');
 		assertEquals('A', config.getCharValue(TEST_KEY, 'Z'));
 		assertEquals('A', config.getCharValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testDoubleSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 10.0);
 		assertEquals(10.0, config.getDoubleValue(TEST_KEY, 20.0), 0.1);
 		assertEquals(10.0, config.getDoubleValue(TEST_KEY), 0.1);
 	}
-	
+
 	@Test
 	public void testFloatSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 321.0f);
 		assertEquals(321.0f, config.getFloatValue(TEST_KEY, 123.0f), 0.1);
 		assertEquals(321.0f, config.getFloatValue(TEST_KEY), 0.1);
 	}
-	
+
 	@Test
 	public void testIntSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 321);
 		assertEquals(321, config.getIntValue(TEST_KEY, 123));
 		assertEquals(321, config.getIntValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testLongSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, 923954957346L);
 		assertEquals(923954957346L, config.getLongValue(TEST_KEY, 823954957346L));
 		assertEquals(923954957346L, config.getLongValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testShortSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, (short) 312);
 		assertEquals((short) 312, config.getShortValue(TEST_KEY, (short) 123));
-		assertEquals((short) 312, config.getShortValue(TEST_KEY));	
+		assertEquals((short) 312, config.getShortValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testStringSetAndGet() throws ConfigurationException {
 		config.setProperty(TEST_KEY, "new string");
 		assertEquals("new string", config.getStringValue(TEST_KEY, "some string"));
-		assertEquals("new string", config.getStringValue(TEST_KEY));	
+		assertEquals("new string", config.getStringValue(TEST_KEY));
 	}
-	
+
 	@Test
 	public void testBooleanList() throws ConfigurationException {
 		config.setProperty(TEST_KEY, "true, true,true");
@@ -143,7 +143,7 @@ public class ConfigurationTest {
 		assertTrue(config.getBooleanList(TEST_KEY).get(0));
 		assertFalse(config.getBooleanList(TEST_KEY).get(1));
 	}
-	
+
 	@Test
 	public void testByteList() throws ConfigurationException {
 		config.setProperty(TEST_KEY, "5, 10");
@@ -206,92 +206,92 @@ public class ConfigurationTest {
 	public void testMissingBooleanValueKey() throws ConfigurationException {
 		config.getBooleanValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingBooleanListKey() throws ConfigurationException {
 		config.getBooleanList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingByteValueKey() throws ConfigurationException {
 		config.getByteValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingByteListKey() throws ConfigurationException {
 		config.getByteList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingCharValueKey() throws ConfigurationException {
 		config.getCharValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingCharListKey() throws ConfigurationException {
 		config.getCharList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingDoubleValueKey() throws ConfigurationException {
 		config.getDoubleValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingDoubleListKey() throws ConfigurationException {
 		config.getDoubleList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingFloatValueKey() throws ConfigurationException {
 		config.getFloatValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingFloatListKey() throws ConfigurationException {
 		config.getFloatList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingIntValueKey() throws ConfigurationException {
 		config.getIntValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingIntListKey() throws ConfigurationException {
 		config.getBooleanList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testLongShortValueKey() throws ConfigurationException {
 		config.getShortValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingShortListKey() throws ConfigurationException {
 		config.getShortList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testLongStringValueKey() throws ConfigurationException {
 		config.getStringValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingStringListKey() throws ConfigurationException {
 		config.getStringList(TEST_KEY, "!");
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testLongBooleanValueKey() throws ConfigurationException {
 		config.getLongValue(TEST_KEY);
 	}
-	
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingLongListKey() throws ConfigurationException {
 		config.getLongList(TEST_KEY, "!");
 	}
-	
+
 	@Test
 	public void testClearProperty() throws ConfigurationException {
 		config.setProperty(TEST_KEY, "!");
@@ -299,13 +299,13 @@ public class ConfigurationTest {
 		config.clearProperty(TEST_KEY);
 		assertEquals("!!!", config.getStringValue(TEST_KEY, "!!!"));
 	}
-	
+
 	@Test
 	public void testClearMissingProperty() {
 		config.clearProperty(TEST_KEY);
 		assertEquals("!!", config.getStringValue(TEST_KEY, "!!"));
 	}
-	
+
 	@After
 	public void tearDown() {
 		config.reset();

@@ -19,7 +19,8 @@ class ConfigUtils {
 		return systemProperties;
 	}
 
-	public static Map<String, String> getConfiguration(String filename, String context) {
+	public static Map<String, String> getConfiguration(String filename,
+			String context) {
 		return new Parser(filename, context).getConfiguration();
 	}
 }

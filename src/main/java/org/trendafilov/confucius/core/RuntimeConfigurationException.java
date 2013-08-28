@@ -7,15 +7,15 @@ public class RuntimeConfigurationException extends RuntimeException {
 	public RuntimeConfigurationException() {
 		super();
 	}
-	
+
 	public RuntimeConfigurationException(String message) {
 		super(message);
 	}
-	
+
 	public RuntimeConfigurationException(Throwable cause) {
 		super(cause);
 	}
-	
+
 	public RuntimeConfigurationException(String message, Throwable cause) {
 		super(message, cause);
 	}

@@ -2,10 +2,9 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>org.trendafilov.confucius</groupId>
-	<artifactId>ljc</artifactId>
+	<artifactId>confucius</artifactId>
 	<version>1.0.0</version>
 	<properties>
-		<spring.version>3.2.3.RELEASE</spring.version>
 		<java.version>1.7</java.version>
 	</properties>
 	<build>

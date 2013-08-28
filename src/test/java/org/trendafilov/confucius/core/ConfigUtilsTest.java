@@ -13,7 +13,7 @@ import org.trendafilov.confucius.Configuration;
 import org.trendafilov.confucius.core.ConfigUtils;
 
 public class ConfigUtilsTest {
-	
+
 	@Test
 	public void sanityCheck() {
 		Map<String, String> properties = ConfigUtils.getSystemProperties();
@@ -32,7 +32,7 @@ public class ConfigUtilsTest {
 		for (Entry<String, String> entry : before.entrySet())
 			assertEquals(entry.getValue(), now.get(entry.getKey()));
 	}
-	
+
 	@After
 	public void tearDown() {
 		Configuration.getInstance().reset();
