@@ -584,11 +584,11 @@ public interface Configurable {
 	/**
 	 * Sets the configuration properties as indicated by the specified map.
 	 * 
-	 * @param propertyMap
+	 * @param properties
 	 *            a map of configuration properties
 	 * @see #setProperty(String, T)
 	 */
-	<T> void setProperties(Map<String, T> propertyMap);
+	<T> void setProperties(Map<String, T> properties);
 
 	/**
 	 * Sets the configuration properties to the <code>Properties</code>

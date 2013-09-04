@@ -229,8 +229,8 @@ public abstract class AbstractConfiguration implements Configurable {
 		LOG.info("Set configuration property: [{}] => [{}]", key, item);
 	}
 
-	public synchronized <T> void setProperties(Map<String, T> propertyMap) {
-		for (Entry<String, T> entry : propertyMap.entrySet())
+	public synchronized <T> void setProperties(Map<String, T> properties) {
+		for (Entry<String, T> entry : properties.entrySet())
 			setProperty(entry.getKey(), entry.getValue());
 	}
 
