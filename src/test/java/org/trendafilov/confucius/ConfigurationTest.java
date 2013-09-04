@@ -4,6 +4,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Properties;
+
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -68,6 +70,12 @@ public class ConfigurationTest {
 	@Test
 	public void testStringDefaultReturn() {
 		assertEquals("some string", config.getStringValue(TEST_KEY, "some string"));
+	}
+
+	@Test
+	public void testPropertySetAndGet() throws ConfigurationException {
+		config.setProperty(TEST_KEY, "value");
+		assertEquals("value", System.getProperty(TEST_KEY));
 	}
 
 	@Test
@@ -202,6 +210,12 @@ public class ConfigurationTest {
 		assertEquals("third", config.getStringList(TEST_KEY).get(2));
 	}
 
+	@Test
+	public void testGetProperties() {
+		Properties props = config.getProperties();
+		assertTrue(props.keySet().size() > 0);
+	}
+
 	@Test(expected = ConfigurationException.class)
 	public void testMissingBooleanValueKey() throws ConfigurationException {
 		config.getBooleanValue(TEST_KEY);
@@ -290,6 +304,16 @@ public class ConfigurationTest {
 	@Test(expected = ConfigurationException.class)
 	public void testMissingLongListKey() throws ConfigurationException {
 		config.getLongList(TEST_KEY, "!");
+	}
+
+	@Test
+	public void testSetProperties() throws ConfigurationException {
+		Properties props = new Properties();
+		props.setProperty(TEST_KEY, "value123");
+		props.setProperty("Other", "value");
+		config.setProperties(props);
+		assertEquals("value123", config.getStringValue(TEST_KEY));
+		assertEquals("value", config.getStringValue("Other"));
 	}
 
 	@Test

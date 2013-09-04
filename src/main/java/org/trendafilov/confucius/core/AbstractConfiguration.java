@@ -5,8 +5,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,22 +23,20 @@ public abstract class AbstractConfiguration implements Configurable {
 	private final static String CONTEXT;
 	private final static Map<String, String> INITIAL_STATE;
 
-	private final Map<String, String> configuration = new ConcurrentHashMap<>();
-
 	static {
 		FILE_PATH = System.getProperty(FILE_PARAM);
 		CONTEXT = System.getProperty(CONTEXT_PARAM);
-		INITIAL_STATE = Collections.unmodifiableMap(ConfigUtils.getSystemProperties());
+		INITIAL_STATE = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
 	}
 
 	protected void init() {
 		LOG.info("Initializing configuration...");
 		setProperties(INITIAL_STATE);
-		setProperties(ConfigUtils.getConfiguration(FILE_PATH, CONTEXT));
+		setProperties(new Parser(FILE_PATH, CONTEXT).getConfiguration());
 	}
 
 	public Set<String> keySet() {
-		return configuration.keySet();
+		return Utils.propertiesToMap(getProperties()).keySet();
 	}
 
 	public boolean getBooleanValue(String key) throws ConfigurationException {
@@ -46,7 +44,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public boolean getBooleanValue(String key, boolean defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Boolean.parseBoolean(value);
 	}
 
@@ -66,7 +64,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public byte getByteValue(String key, byte defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Byte.parseByte(value);
 	}
 
@@ -86,7 +84,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public char getCharValue(String key, char defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : value.charAt(0);
 	}
 
@@ -97,8 +95,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return parts;
 	}
 
-	public List<Character> getCharList(String key)
-			throws ConfigurationException {
+	public List<Character> getCharList(String key) throws ConfigurationException {
 		return getCharList(key, ITEM_SEPARATOR);
 	}
 
@@ -107,7 +104,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public double getDoubleValue(String key, double defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Double.parseDouble(value);
 	}
 
@@ -127,7 +124,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public float getFloatValue(String key, float defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Float.parseFloat(value);
 	}
 
@@ -147,7 +144,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public int getIntValue(String key, int defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Integer.parseInt(value);
 	}
 
@@ -167,7 +164,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public long getLongValue(String key, long defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
 
@@ -187,7 +184,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public short getShortValue(String key, short defaultValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defaultValue : Short.parseShort(value);
 	}
 
@@ -207,7 +204,7 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public String getStringValue(String key, String defautValue) {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		return value == null ? defautValue : value;
 	}
 
@@ -222,9 +219,12 @@ public abstract class AbstractConfiguration implements Configurable {
 		return getStringList(key, ITEM_SEPARATOR);
 	}
 
+	public Properties getProperties() {
+		return System.getProperties();
+	}
+
 	public synchronized <T> void setProperty(String key, T value) {
 		String item = value.toString();
-		configuration.put(key, item);
 		System.setProperty(key, item);
 		LOG.info("Set configuration property: [{}] => [{}]", key, item);
 	}
@@ -234,34 +234,36 @@ public abstract class AbstractConfiguration implements Configurable {
 			setProperty(entry.getKey(), entry.getValue());
 	}
 
+	public void setProperties(Properties properties) {
+		for (Object e : properties.keySet())
+			setProperty((String) e, properties.getProperty((String) e));
+	}
+
 	public synchronized void clearProperty(String key) {
-		if (configuration.remove(key) != null) {
-			System.clearProperty(key);
-			LOG.info("Unset configuration property: [{}]", key);
-		}
+		System.clearProperty(key);
+		LOG.info("Unset configuration property: [{}]", key);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 * 
 	 * <p>
-	 * The reset procedure restores system configuration properties to their
-	 * initial values at the time of creation of the <tt>Configurable</tt>
-	 * instance. Configuration properties specified via a file are re-processed.
+	 * The reset procedure restores configuration properties to their initial
+	 * values at the time of creation of the <tt>Configurable</tt> instance.
+	 * Configuration properties specified via a file are re-processed.
 	 * </p>
 	 */
 	public synchronized void reset() {
-		for (String key : configuration.keySet())
+		for (String key : Utils.propertiesToMap(getProperties()).keySet())
 			clearProperty(key);
 		init();
 		LOG.info("Configuration properties have been reset");
 	}
 
 	private String getKey(String key) throws ConfigurationException {
-		String value = configuration.get(key);
+		String value = System.getProperty(key);
 		if (value == null)
-			throw new ConfigurationException(String.format(
-					"Unable to find configuration value for key [%s]", key));
+			throw new ConfigurationException(String.format("Unable to find configuration value for key [%s]", key));
 		return value;
 	}
 }

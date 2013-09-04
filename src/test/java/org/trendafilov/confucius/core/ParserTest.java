@@ -43,10 +43,8 @@ public class ParserTest {
 
 	@Test
 	public void testAllEmptyContexts() {
-		createFile(Collections.<String, String> emptyMap(), TEST_CONTEXT,
-				Collections.<String, String> emptyMap());
-		assertTrue(new Parser(FILENAME, TEST_CONTEXT).getConfiguration()
-				.isEmpty());
+		createFile(Collections.<String, String> emptyMap(), TEST_CONTEXT, Collections.<String, String> emptyMap());
+		assertTrue(new Parser(FILENAME, TEST_CONTEXT).getConfiguration().isEmpty());
 	}
 
 	@Test
@@ -178,11 +176,11 @@ public class ParserTest {
 	}
 
 	@Test
-	public void testNoContexts() throws Exception {
+	public void testLegacyFormat() throws Exception {
 		PrintWriter writer = new PrintWriter(FILENAME, "UTF-8");
-		writeLine(writer, makeMap("key1", "value1"));
+		writeLine(writer, makeMap("key1", "value1"), false);
 		writer.println(" ");
-		writeLine(writer, makeMap("key3", "value3"));
+		writeLine(writer, makeMap("key3", "value3"), false);
 		writer.close();
 		Map<String, String> configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();
 		assertTrue(configuration.size() == 2);
@@ -212,11 +210,15 @@ public class ParserTest {
 		}
 	}
 
-	private void writeLine(PrintWriter writer, Map<String, String> content) {
+	private void writeLine(PrintWriter writer, Map<String, String> context) {
+		writeLine(writer, context, true);
+	}
+
+	private void writeLine(PrintWriter writer, Map<String, String> content, boolean hasComments) {
 		for (Entry<String, String> pair : content.entrySet()) {
 			StringBuilder line = new StringBuilder();
 			line.append(pair.getKey()).append(" = ").append(pair.getValue());
-			if (Math.random() <= 0.20)
+			if (Math.random() <= 0.20 && hasComments)
 				line.append(" # some random comment");
 			writer.println(line.toString());
 		}

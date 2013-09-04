@@ -1,6 +1,7 @@
 package org.trendafilov.confucius.core;
 
 import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
 import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -9,6 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Properties;
 
 class Parser {
 	private final static String DEFAULT_CONTEXT = "Default";
@@ -24,10 +26,10 @@ class Parser {
 	public Parser(String filename, String context) {
 		try {
 			Collection<String> lines = readLines(filename);
-			parseNoContext(lines);
+			parseLegacyFormat(lines);
 			parseContext(lines, DEFAULT_CONTEXT);
 			parseContext(lines, context);
-			substitute();
+			parseVariables();
 		} catch (IOException e) {
 			throw new RuntimeConfigurationException("Unable to read configuration file", e);
 		}
@@ -66,14 +68,21 @@ class Parser {
 		}
 	}
 
-	private void parseNoContext(Collection<String> lines) {
-		boolean hasNoContext = true;
+	private void parseLegacyFormat(Collection<String> lines) throws IOException {
+		boolean isLegacy = true;
 		for (String line : lines)
 			if (isContext(line))
-				hasNoContext = false;
-		if (hasNoContext)
-			for (String line : lines)
-				configuration.putAll(parseLine(line));
+				isLegacy = false;
+		if (isLegacy) {
+			StringBuilder lineBuffer = new StringBuilder();
+			for (String line : lines) {
+				lineBuffer.append(line);
+				lineBuffer.append(System.lineSeparator());
+			}
+			Properties props = new Properties();
+			props.load(new ByteArrayInputStream(lineBuffer.toString().getBytes("UTF-8")));
+			configuration.putAll(Utils.propertiesToMap(props));
+		}
 	}
 
 	private void parseContext(Collection<String> lines, String context) {
@@ -88,7 +97,7 @@ class Parser {
 		}
 	}
 
-	private void substitute() {
+	private void parseVariables() {
 		int previousSize = 0;
 		Map<String, String> unresolved = new HashMap<>();
 		for (Entry<String, String> entry : configuration.entrySet())
