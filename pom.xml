@@ -17,11 +17,11 @@
 			<distribution>repo</distribution>
 		</license>
 	</licenses>
-	<scm>
-		<connection>scm:git:https://github.com/IvanTrendafilov/Confucius.git</connection>
-		<developerConnection>scm:git:https://github.com/IvanTrendafilov/Confucius.git</developerConnection>
-		<url>https://github.com/IvanTrendafilov/Confucius</url>
-	</scm>
+  <scm>
+    <connection>scm:git:git@github.com:IvanTrendafilov/Confucius.git</connection>
+    <developerConnection>scm:git:git@github.com:IvanTrendafilov/Confucius.git</developerConnection>
+    <url>git@github.com:IvanTrendafilov/Confucius.git</url>
+  </scm>
 	<developers>
 		<developer>
 			<id>ivan.trendafilov</id>
