@@ -1,0 +1,255 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ParserTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Confucius (18-Sep-2013 01:26:47)</a> &gt; <a href="../../index.html" class="el_group">Confucius</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.html" class="el_package">org.trendafilov.confucius.core</a> &gt; <span class="el_source">ParserTest.java</span></div><h1>ParserTest.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright 2013 Ivan Trendafilov
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.trendafilov.confucius.core;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.junit.After;
+import org.junit.Test;
+import org.trendafilov.confucius.core.Parser;
+
+<span class="fc" id="L35">public class ParserTest {</span>
+<span class="fc" id="L36">	private final static String FILENAME = System.getProperty(&quot;java.io.tmpdir&quot;) + File.separator + &quot;ljctest.cfg&quot;;</span>
+<span class="fc" id="L37">	private final static String TEST_CONTEXT = &quot;Test&quot;;</span>
+
+	@Test
+	public void testValidConfigFile() {
+<span class="fc" id="L41">		createFile(Collections.&lt;String, String&gt; emptyMap(), null, null);</span>
+<span class="fc" id="L42">		assertTrue(new Parser(FILENAME, null).getConfiguration().isEmpty());</span>
+<span class="fc" id="L43">	}</span>
+
+	@Test
+	public void testNullConfig() {
+<span class="fc" id="L47">		assertTrue(new Parser(null, null).getConfiguration().isEmpty());</span>
+<span class="fc" id="L48">	}</span>
+
+	@Test(expected = RuntimeConfigurationException.class)
+	public void testMissingConfigFile() {
+<span class="nc" id="L52">		new Parser(FILENAME + &quot;test&quot;, null).getConfiguration();</span>
+<span class="nc" id="L53">	}</span>
+
+	@Test(expected = RuntimeConfigurationException.class)
+	public void testMissingConfigFileWithContext() {
+<span class="nc" id="L57">		new Parser(FILENAME + &quot;test&quot;, TEST_CONTEXT);</span>
+<span class="nc" id="L58">	}</span>
+
+	@Test
+	public void testAllEmptyContexts() {
+<span class="fc" id="L62">		createFile(Collections.&lt;String, String&gt; emptyMap(), TEST_CONTEXT, Collections.&lt;String, String&gt; emptyMap());</span>
+<span class="fc" id="L63">		assertTrue(new Parser(FILENAME, TEST_CONTEXT).getConfiguration().isEmpty());</span>
+<span class="fc" id="L64">	}</span>
+
+	@Test
+	public void testEmptyContext() {
+<span class="fc" id="L68">		createFile(makeMap(&quot;key&quot;, &quot;value&quot;), TEST_CONTEXT, Collections.&lt;String, String&gt; emptyMap());</span>
+<span class="fc" id="L69">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="fc" id="L70">		assertEquals(&quot;value&quot;, configuration.get(&quot;key&quot;));</span>
+<span class="fc" id="L71">	}</span>
+
+	@Test
+	public void testDefaultContext() {
+<span class="fc" id="L75">		Map&lt;String, String&gt; map = makeMap(&quot;somekey&quot;, &quot;somevalue&quot;, &quot;newkey&quot;, &quot;newvalue&quot;);</span>
+<span class="fc" id="L76">		createFile(map, null, null);</span>
+<span class="fc" id="L77">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, null).getConfiguration();</span>
+<span class="pc bpc" id="L78" title="1 of 2 branches missed.">		assertTrue(map.size() == 2);</span>
+<span class="fc bfc" id="L79" title="All 2 branches covered.">		for (Entry&lt;String, String&gt; entry : configuration.entrySet())</span>
+<span class="fc" id="L80">			assertEquals(map.get(entry.getKey()), entry.getValue());</span>
+<span class="fc" id="L81">	}</span>
+
+	@Test
+	public void testBothContexts() {
+<span class="fc" id="L85">		createFile(makeMap(&quot;somekey&quot;, &quot;somevalue&quot;, &quot;newkey&quot;, &quot;newvalue&quot;), TEST_CONTEXT, makeMap(&quot;test&quot;, &quot;123&quot;));</span>
+<span class="fc" id="L86">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="fc" id="L87">		assertEquals(&quot;somevalue&quot;, configuration.get(&quot;somekey&quot;));</span>
+<span class="fc" id="L88">		assertEquals(&quot;newvalue&quot;, configuration.get(&quot;newkey&quot;));</span>
+<span class="fc" id="L89">		assertEquals(&quot;123&quot;, configuration.get(&quot;test&quot;));</span>
+<span class="pc bpc" id="L90" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 3);</span>
+<span class="fc" id="L91">	}</span>
+
+	@Test
+	public void testBothContextsWithOverride() {
+<span class="fc" id="L95">		createFile(makeMap(&quot;somekey&quot;, &quot;somevalue&quot;, &quot;newkey&quot;, &quot;newvalue&quot;), TEST_CONTEXT, makeMap(&quot;newkey&quot;, &quot;123&quot;));</span>
+<span class="fc" id="L96">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="fc" id="L97">		assertEquals(&quot;somevalue&quot;, configuration.get(&quot;somekey&quot;));</span>
+<span class="fc" id="L98">		assertEquals(&quot;123&quot;, configuration.get(&quot;newkey&quot;));</span>
+<span class="pc bpc" id="L99" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 2);</span>
+<span class="fc" id="L100">	}</span>
+
+	@Test
+	public void testSubstitutionSameContext() {
+<span class="fc" id="L104">		createFile(makeMap(&quot;key1&quot;, &quot;value&quot;, &quot;key2&quot;, &quot;${key1}&quot;), null, null);</span>
+<span class="fc" id="L105">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L106" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 2);</span>
+<span class="fc" id="L107">		assertEquals(&quot;value&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L108">		assertEquals(&quot;value&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L109">	}</span>
+
+	@Test
+	public void testSubstitutionAcrossContexts() {
+<span class="fc" id="L113">		createFile(makeMap(&quot;key1&quot;, &quot;value&quot;), TEST_CONTEXT, makeMap(&quot;key2&quot;, &quot;${key1}&quot;));</span>
+<span class="fc" id="L114">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L115" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 2);</span>
+<span class="fc" id="L116">		assertEquals(&quot;value&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L117">		assertEquals(&quot;value&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L118">	}</span>
+
+	@Test
+	public void testSubstitutionChained() {
+<span class="fc" id="L122">		createFile(makeMap(&quot;key0&quot;, &quot;0&quot;, &quot;key1&quot;, &quot;value&quot;, &quot;random&quot;, &quot;no&quot;, &quot;key2&quot;, &quot;${key1}&quot;, &quot;key3&quot;, &quot;${key2}&quot;, &quot;key4&quot;, &quot;${key0}&quot;), null, null);</span>
+<span class="fc" id="L123">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L124" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 6);</span>
+<span class="fc" id="L125">		assertEquals(&quot;0&quot;, configuration.get(&quot;key0&quot;));</span>
+<span class="fc" id="L126">		assertEquals(&quot;value&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L127">		assertEquals(&quot;no&quot;, configuration.get(&quot;random&quot;));</span>
+<span class="fc" id="L128">		assertEquals(&quot;value&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L129">		assertEquals(&quot;value&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L130">		assertEquals(&quot;0&quot;, configuration.get(&quot;key4&quot;));</span>
+<span class="fc" id="L131">	}</span>
+
+	@Test
+	public void testSubstitutionChainedAcrossContexts() {
+<span class="fc" id="L135">		createFile(makeMap(&quot;key1&quot;, &quot;value&quot;, &quot;key2&quot;, &quot;${key1}&quot;), TEST_CONTEXT, makeMap(&quot;key3&quot;, &quot;${key2}&quot;, &quot;key4&quot;, &quot;${key0}&quot;));</span>
+<span class="fc" id="L136">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L137" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 4);</span>
+<span class="fc" id="L138">		assertEquals(&quot;value&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L139">		assertEquals(&quot;value&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L140">		assertEquals(&quot;value&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L141">		assertEquals(&quot;${key0}&quot;, configuration.get(&quot;key4&quot;));</span>
+<span class="fc" id="L142">	}</span>
+
+	@Test
+	public void testSubstitutionWithOverride() {
+<span class="fc" id="L146">		createFile(makeMap(&quot;key0&quot;, &quot;0&quot;, &quot;key1&quot;, &quot;value&quot;, &quot;key2&quot;, &quot;${key1}&quot;), TEST_CONTEXT, makeMap(&quot;key2&quot;, &quot;${key0}&quot;, &quot;key3&quot;, &quot;${key0}&quot;));</span>
+<span class="fc" id="L147">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L148" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 4);</span>
+<span class="fc" id="L149">		assertEquals(&quot;0&quot;, configuration.get(&quot;key0&quot;));</span>
+<span class="fc" id="L150">		assertEquals(&quot;value&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L151">		assertEquals(&quot;0&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L152">		assertEquals(&quot;0&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L153">	}</span>
+
+	@Test
+	public void testSubstitutionCircular() {
+<span class="fc" id="L157">		createFile(makeMap(&quot;key1&quot;, &quot;${key3}&quot;, &quot;key2&quot;, &quot;${key1}&quot;, &quot;key3&quot;, &quot;${key2}&quot;), null, null);</span>
+<span class="fc" id="L158">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L159" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 3);</span>
+<span class="fc" id="L160">		assertEquals(&quot;${key3}&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L161">		assertEquals(&quot;${key1}&quot;, configuration.get(&quot;key2&quot;));</span>
+<span class="fc" id="L162">		assertEquals(&quot;${key2}&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L163">	}</span>
+
+	@Test(expected = RuntimeConfigurationException.class)
+	public void testUnparsableLine() throws Exception {
+<span class="nc" id="L167">		PrintWriter writer = new PrintWriter(FILENAME, &quot;UTF-8&quot;);</span>
+<span class="nc" id="L168">		writer.println(&quot;[Default]&quot;);</span>
+<span class="nc" id="L169">		writeLine(writer, makeMap(&quot;key1&quot;, &quot;value1&quot;));</span>
+<span class="nc" id="L170">		writer.println(&quot; &quot;);</span>
+<span class="nc" id="L171">		writer.println(&quot;Somestuff #&quot;);</span>
+<span class="nc" id="L172">		writer.close();</span>
+<span class="nc" id="L173">		new Parser(FILENAME, null);</span>
+<span class="nc" id="L174">	}</span>
+
+	@Test
+	public void testMultiContextRead() throws Exception {
+<span class="fc" id="L178">		PrintWriter writer = new PrintWriter(FILENAME, &quot;UTF-8&quot;);</span>
+<span class="fc" id="L179">		writer.println(&quot;[Default]&quot;);</span>
+<span class="fc" id="L180">		writeLine(writer, makeMap(&quot;key1&quot;, &quot;value1&quot;)); // will be included</span>
+<span class="fc" id="L181">		writer.println(&quot;[&quot; + TEST_CONTEXT + &quot;-2]&quot;);</span>
+<span class="fc" id="L182">		writeLine(writer, makeMap(&quot;key2&quot;, &quot;value2&quot;));</span>
+<span class="fc" id="L183">		writer.println(&quot;[&quot; + TEST_CONTEXT + &quot;]&quot;);</span>
+<span class="fc" id="L184">		writeLine(writer, makeMap(&quot;key3&quot;, &quot;value3&quot;)); // will be included</span>
+<span class="fc" id="L185">		writer.println(&quot;[&quot; + TEST_CONTEXT + &quot;-3]&quot;);</span>
+<span class="fc" id="L186">		writeLine(writer, makeMap(&quot;key4&quot;, &quot;value4&quot;));</span>
+<span class="fc" id="L187">		writer.close();</span>
+<span class="fc" id="L188">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L189" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 2);</span>
+<span class="fc" id="L190">		assertEquals(&quot;value3&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L191">		assertEquals(&quot;value1&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L192">	}</span>
+
+	@Test
+	public void testLegacyFormat() throws Exception {
+<span class="fc" id="L196">		PrintWriter writer = new PrintWriter(FILENAME, &quot;UTF-8&quot;);</span>
+<span class="fc" id="L197">		writeLine(writer, makeMap(&quot;key1&quot;, &quot;value1&quot;), false);</span>
+<span class="fc" id="L198">		writer.println(&quot; &quot;);</span>
+<span class="fc" id="L199">		writeLine(writer, makeMap(&quot;key3&quot;, &quot;value3&quot;), false);</span>
+<span class="fc" id="L200">		writer.close();</span>
+<span class="fc" id="L201">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="pc bpc" id="L202" title="1 of 2 branches missed.">		assertTrue(configuration.size() == 2);</span>
+<span class="fc" id="L203">		assertEquals(&quot;value3&quot;, configuration.get(&quot;key3&quot;));</span>
+<span class="fc" id="L204">		assertEquals(&quot;value1&quot;, configuration.get(&quot;key1&quot;));</span>
+<span class="fc" id="L205">	}</span>
+
+	@Test
+	public void testComplexString() {
+<span class="fc" id="L209">		createFile(makeMap(&quot;key&quot;, &quot;https://www.google.com/fp=dfc3525e9a3b356a&amp;q=hello&amp;safe=off/&quot;), TEST_CONTEXT, Collections.&lt;String, String&gt; emptyMap());</span>
+<span class="fc" id="L210">		Map&lt;String, String&gt; configuration = new Parser(FILENAME, TEST_CONTEXT).getConfiguration();</span>
+<span class="fc" id="L211">		assertEquals(&quot;https://www.google.com/fp=dfc3525e9a3b356a&amp;q=hello&amp;safe=off/&quot;, configuration.get(&quot;key&quot;));</span>
+<span class="fc" id="L212">	}</span>
+
+	private void createFile(Map&lt;String, String&gt; defaultPairs, String contextName, Map&lt;String, String&gt; contextPairs) {
+		try {
+<span class="fc" id="L216">			PrintWriter writer = new PrintWriter(FILENAME, &quot;UTF-8&quot;);</span>
+<span class="fc" id="L217">			writer.println(&quot;[Default]&quot;);</span>
+<span class="fc" id="L218">			writeLine(writer, defaultPairs);</span>
+<span class="fc bfc" id="L219" title="All 2 branches covered.">			if (contextName != null) {</span>
+<span class="fc" id="L220">				writer.println(&quot;[&quot; + contextName + &quot;]&quot;);</span>
+<span class="fc" id="L221">				writeLine(writer, contextPairs);</span>
+			}
+<span class="fc" id="L223">			writer.close();</span>
+<span class="pc" id="L224">		} catch (FileNotFoundException | UnsupportedEncodingException e) {</span>
+<span class="nc" id="L225">			throw new RuntimeException(e);</span>
+		}
+<span class="fc" id="L227">	}</span>
+
+	private void writeLine(PrintWriter writer, Map&lt;String, String&gt; context) {
+<span class="fc" id="L230">		writeLine(writer, context, true);</span>
+<span class="fc" id="L231">	}</span>
+
+	private void writeLine(PrintWriter writer, Map&lt;String, String&gt; content, boolean hasComments) {
+<span class="fc bfc" id="L234" title="All 2 branches covered.">		for (Entry&lt;String, String&gt; pair : content.entrySet()) {</span>
+<span class="fc" id="L235">			StringBuilder line = new StringBuilder();</span>
+<span class="fc" id="L236">			line.append(pair.getKey()).append(&quot; = &quot;).append(pair.getValue());</span>
+<span class="pc bpc" id="L237" title="1 of 4 branches missed.">			if (Math.random() &lt;= 0.20 &amp;&amp; hasComments)</span>
+<span class="fc" id="L238">				line.append(&quot; # some random comment&quot;);</span>
+<span class="fc" id="L239">			writer.println(line.toString());</span>
+		}
+<span class="fc" id="L241">	}</span>
+
+	private Map&lt;String, String&gt; makeMap(String... args) {
+<span class="fc" id="L244">		Map&lt;String, String&gt; map = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L245" title="All 2 branches covered.">		for (int i = 0; i &lt; args.length; i++)</span>
+<span class="fc" id="L246">			map.put(args[i], args[++i]);</span>
+<span class="fc" id="L247">		return map;</span>
+	}
+
+	@After
+	public void tearDown() {
+<span class="fc" id="L252">		new File(FILENAME).delete();</span>
+<span class="fc" id="L253">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Confucius (18-Sep-2013 01:26:47)</div></body></html>

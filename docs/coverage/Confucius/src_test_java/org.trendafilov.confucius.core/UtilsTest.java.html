@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>UtilsTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Confucius (18-Sep-2013 01:26:47)</a> &gt; <a href="../../index.html" class="el_group">Confucius</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.html" class="el_package">org.trendafilov.confucius.core</a> &gt; <span class="el_source">UtilsTest.java</span></div><h1>UtilsTest.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright 2013 Ivan Trendafilov
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.trendafilov.confucius.core;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Map;
+import java.util.Map.Entry;
+
+import org.junit.After;
+import org.junit.Test;
+import org.trendafilov.confucius.Configuration;
+import org.trendafilov.confucius.core.Utils;
+
+<span class="fc" id="L31">public class UtilsTest {</span>
+
+	@Test
+	public void sanityCheck() {
+<span class="fc" id="L35">		Map&lt;String, String&gt; properties = Utils.propertiesToMap(System.getProperties());</span>
+<span class="pc bpc" id="L36" title="1 of 2 branches missed.">		assertTrue(properties.size() &gt; 0);</span>
+<span class="fc" id="L37">		assertNotNull(properties.get(&quot;java.vm.version&quot;));</span>
+<span class="fc" id="L38">	}</span>
+
+	@Test
+	public void testReset() {
+<span class="fc" id="L42">		Map&lt;String, String&gt; before = Utils.propertiesToMap(System.getProperties());</span>
+<span class="fc" id="L43">		Configuration.getInstance().setProperty(&quot;123123&quot;, &quot;test-value&quot;);</span>
+<span class="fc" id="L44">		Configuration.getInstance().setProperty(&quot;test-key-123&quot;, &quot;test-value&quot;);</span>
+<span class="fc" id="L45">		Configuration.getInstance().reset();</span>
+<span class="fc" id="L46">		Map&lt;String, String&gt; now = Utils.propertiesToMap(System.getProperties());</span>
+<span class="pc bpc" id="L47" title="2 of 4 branches missed.">		assertTrue(before.size() == now.size() &amp;&amp; now.size() &gt; 0);</span>
+<span class="fc bfc" id="L48" title="All 2 branches covered.">		for (Entry&lt;String, String&gt; entry : before.entrySet())</span>
+<span class="fc" id="L49">			assertEquals(entry.getValue(), now.get(entry.getKey()));</span>
+<span class="fc" id="L50">	}</span>
+
+	@After
+	public void tearDown() {
+<span class="fc" id="L54">		Configuration.getInstance().reset();</span>
+<span class="fc" id="L55">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Confucius (18-Sep-2013 01:26:47)</div></body></html>

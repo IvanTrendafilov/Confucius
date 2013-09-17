@@ -1,0 +1,354 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>ConfigurationTest.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Confucius (18-Sep-2013 01:26:47)</a> &gt; <a href="../../index.html" class="el_group">Confucius</a> &gt; <a href="../index.html" class="el_bundle">src/test/java</a> &gt; <a href="index.html" class="el_package">org.trendafilov.confucius</a> &gt; <span class="el_source">ConfigurationTest.java</span></div><h1>ConfigurationTest.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright 2013 Ivan Trendafilov
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.trendafilov.confucius;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
+
+import java.util.Properties;
+
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+import org.trendafilov.confucius.Configuration;
+import org.trendafilov.confucius.core.ConfigurationException;
+
+<span class="fc" id="L31">public class ConfigurationTest {</span>
+	private Configuration config;
+	private final static String TEST_KEY = &quot;testkey1231&quot;;
+
+	@Before
+	public void setUp() {
+<span class="fc" id="L37">		config = Configuration.getInstance();</span>
+<span class="fc" id="L38">	}</span>
+
+	@Test
+	public void sanityCheck() {
+<span class="fc" id="L42">		assertFalse(Configuration.getInstance().keySet().isEmpty());</span>
+<span class="fc" id="L43">	}</span>
+
+	@Test
+	public void testBooleanDefaultReturn() {
+<span class="fc" id="L47">		assertFalse(config.getBooleanValue(TEST_KEY, false));</span>
+<span class="fc" id="L48">		assertTrue(config.getBooleanValue(TEST_KEY, true));</span>
+<span class="fc" id="L49">	}</span>
+
+	@Test
+	public void testByteDefaultReturn() {
+<span class="fc" id="L53">		assertEquals((byte) 10, config.getByteValue(TEST_KEY, (byte) 10));</span>
+<span class="fc" id="L54">	}</span>
+
+	@Test
+	public void testCharDefaultReturn() {
+<span class="fc" id="L58">		assertEquals('Z', config.getCharValue(TEST_KEY, 'Z'));</span>
+<span class="fc" id="L59">	}</span>
+
+	@Test
+	public void testDoubleDefaultReturn() {
+<span class="fc" id="L63">		assertEquals(20.0, config.getDoubleValue(TEST_KEY, 20.0), 0.1);</span>
+<span class="fc" id="L64">	}</span>
+
+	@Test
+	public void testFloatDefaultReturn() {
+<span class="fc" id="L68">		assertEquals(123.0f, config.getFloatValue(TEST_KEY, 123.0f), 0.1);</span>
+<span class="fc" id="L69">	}</span>
+
+	@Test
+	public void testIntDefaultReturn() {
+<span class="fc" id="L73">		assertEquals(123, config.getIntValue(TEST_KEY, 123));</span>
+<span class="fc" id="L74">	}</span>
+
+	@Test
+	public void testLongDefaultReturn() {
+<span class="fc" id="L78">		assertEquals(823954957346L, config.getLongValue(TEST_KEY, 823954957346L));</span>
+<span class="fc" id="L79">	}</span>
+
+	@Test
+	public void testShortDefaultReturn() {
+<span class="fc" id="L83">		assertEquals((short) 123, config.getShortValue(TEST_KEY, (short) 123));</span>
+<span class="fc" id="L84">	}</span>
+
+	@Test
+	public void testStringDefaultReturn() {
+<span class="fc" id="L88">		assertEquals(&quot;some string&quot;, config.getStringValue(TEST_KEY, &quot;some string&quot;));</span>
+<span class="fc" id="L89">	}</span>
+
+	@Test
+	public void testPropertySetAndGet() throws ConfigurationException {
+<span class="fc" id="L93">		config.setProperty(TEST_KEY, &quot;value&quot;);</span>
+<span class="fc" id="L94">		assertEquals(&quot;value&quot;, System.getProperty(TEST_KEY));</span>
+<span class="fc" id="L95">	}</span>
+
+	@Test
+	public void testBooleanSetAndGet() throws ConfigurationException {
+<span class="fc" id="L99">		config.setProperty(TEST_KEY, true);</span>
+<span class="fc" id="L100">		assertTrue(config.getBooleanValue(TEST_KEY, false));</span>
+<span class="fc" id="L101">		assertTrue(config.getBooleanValue(TEST_KEY));</span>
+<span class="fc" id="L102">	}</span>
+
+	@Test
+	public void testByteSetAndGet() throws ConfigurationException {
+<span class="fc" id="L106">		config.setProperty(TEST_KEY, 5);</span>
+<span class="fc" id="L107">		assertEquals((byte) 5, config.getByteValue(TEST_KEY, (byte) 10));</span>
+<span class="fc" id="L108">		assertEquals((byte) 5, config.getByteValue(TEST_KEY));</span>
+
+<span class="fc" id="L110">	}</span>
+
+	@Test
+	public void testCharSetAndGet() throws ConfigurationException {
+<span class="fc" id="L114">		config.setProperty(TEST_KEY, 'A');</span>
+<span class="fc" id="L115">		assertEquals('A', config.getCharValue(TEST_KEY, 'Z'));</span>
+<span class="fc" id="L116">		assertEquals('A', config.getCharValue(TEST_KEY));</span>
+<span class="fc" id="L117">	}</span>
+
+	@Test
+	public void testDoubleSetAndGet() throws ConfigurationException {
+<span class="fc" id="L121">		config.setProperty(TEST_KEY, 10.0);</span>
+<span class="fc" id="L122">		assertEquals(10.0, config.getDoubleValue(TEST_KEY, 20.0), 0.1);</span>
+<span class="fc" id="L123">		assertEquals(10.0, config.getDoubleValue(TEST_KEY), 0.1);</span>
+<span class="fc" id="L124">	}</span>
+
+	@Test
+	public void testFloatSetAndGet() throws ConfigurationException {
+<span class="fc" id="L128">		config.setProperty(TEST_KEY, 321.0f);</span>
+<span class="fc" id="L129">		assertEquals(321.0f, config.getFloatValue(TEST_KEY, 123.0f), 0.1);</span>
+<span class="fc" id="L130">		assertEquals(321.0f, config.getFloatValue(TEST_KEY), 0.1);</span>
+<span class="fc" id="L131">	}</span>
+
+	@Test
+	public void testIntSetAndGet() throws ConfigurationException {
+<span class="fc" id="L135">		config.setProperty(TEST_KEY, 321);</span>
+<span class="fc" id="L136">		assertEquals(321, config.getIntValue(TEST_KEY, 123));</span>
+<span class="fc" id="L137">		assertEquals(321, config.getIntValue(TEST_KEY));</span>
+<span class="fc" id="L138">	}</span>
+
+	@Test
+	public void testLongSetAndGet() throws ConfigurationException {
+<span class="fc" id="L142">		config.setProperty(TEST_KEY, 923954957346L);</span>
+<span class="fc" id="L143">		assertEquals(923954957346L, config.getLongValue(TEST_KEY, 823954957346L));</span>
+<span class="fc" id="L144">		assertEquals(923954957346L, config.getLongValue(TEST_KEY));</span>
+<span class="fc" id="L145">	}</span>
+
+	@Test
+	public void testShortSetAndGet() throws ConfigurationException {
+<span class="fc" id="L149">		config.setProperty(TEST_KEY, (short) 312);</span>
+<span class="fc" id="L150">		assertEquals((short) 312, config.getShortValue(TEST_KEY, (short) 123));</span>
+<span class="fc" id="L151">		assertEquals((short) 312, config.getShortValue(TEST_KEY));</span>
+<span class="fc" id="L152">	}</span>
+
+	@Test
+	public void testStringSetAndGet() throws ConfigurationException {
+<span class="fc" id="L156">		config.setProperty(TEST_KEY, &quot;new string&quot;);</span>
+<span class="fc" id="L157">		assertEquals(&quot;new string&quot;, config.getStringValue(TEST_KEY, &quot;some string&quot;));</span>
+<span class="fc" id="L158">		assertEquals(&quot;new string&quot;, config.getStringValue(TEST_KEY));</span>
+<span class="fc" id="L159">	}</span>
+
+	@Test
+	public void testBooleanList() throws ConfigurationException {
+<span class="fc" id="L163">		config.setProperty(TEST_KEY, &quot;true, true,true&quot;);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">		for (boolean value : config.getBooleanList(TEST_KEY))</span>
+<span class="fc" id="L165">			assertTrue(value);</span>
+<span class="fc" id="L166">		config.setProperty(TEST_KEY, &quot;true, false&quot;);</span>
+<span class="fc" id="L167">		assertTrue(config.getBooleanList(TEST_KEY).get(0));</span>
+<span class="fc" id="L168">		assertFalse(config.getBooleanList(TEST_KEY).get(1));</span>
+<span class="fc" id="L169">	}</span>
+
+	@Test
+	public void testByteList() throws ConfigurationException {
+<span class="fc" id="L173">		config.setProperty(TEST_KEY, &quot;5, 10&quot;);</span>
+<span class="fc" id="L174">		assertEquals((byte) 5, (byte) config.getByteList(TEST_KEY).get(0));</span>
+<span class="fc" id="L175">		assertEquals((byte) 10, (byte) config.getByteList(TEST_KEY).get(1));</span>
+<span class="fc" id="L176">	}</span>
+
+	@Test
+	public void testCharList() throws ConfigurationException {
+<span class="fc" id="L180">		config.setProperty(TEST_KEY, &quot;A,B&quot;);</span>
+<span class="fc" id="L181">		assertEquals('A', (char) config.getCharList(TEST_KEY).get(0));</span>
+<span class="fc" id="L182">		assertEquals('B', (char) config.getCharList(TEST_KEY).get(1));</span>
+<span class="fc" id="L183">	}</span>
+
+	@Test
+	public void testDoubleList() throws ConfigurationException {
+<span class="fc" id="L187">		config.setProperty(TEST_KEY, &quot;10.0,20.0&quot;);</span>
+<span class="fc" id="L188">		assertEquals(10.0, config.getDoubleList(TEST_KEY).get(0), 0.1);</span>
+<span class="fc" id="L189">		assertEquals(20.0, config.getDoubleList(TEST_KEY).get(1), 0.1);</span>
+<span class="fc" id="L190">	}</span>
+
+	@Test
+	public void testFloatList() throws ConfigurationException {
+<span class="fc" id="L194">		config.setProperty(TEST_KEY, &quot;321.00, 333.1&quot;);</span>
+<span class="fc" id="L195">		assertEquals(321.00f, config.getFloatList(TEST_KEY).get(0), 0.1);</span>
+<span class="fc" id="L196">		assertEquals(333.1f, config.getFloatList(TEST_KEY).get(1), 0.1);</span>
+<span class="fc" id="L197">	}</span>
+
+	@Test
+	public void testIntList() throws ConfigurationException {
+<span class="fc" id="L201">		config.setProperty(TEST_KEY, &quot;123,321, 999&quot;);</span>
+<span class="fc" id="L202">		assertEquals(123, (int) config.getIntList(TEST_KEY).get(0));</span>
+<span class="fc" id="L203">		assertEquals(321, (int) config.getIntList(TEST_KEY).get(1));</span>
+<span class="fc" id="L204">		assertEquals(999, (int) config.getIntList(TEST_KEY).get(2));</span>
+<span class="fc" id="L205">	}</span>
+
+	@Test
+	public void testLongList() throws ConfigurationException {
+<span class="fc" id="L209">		config.setProperty(TEST_KEY, &quot;923954957346,823954957346&quot;);</span>
+<span class="fc" id="L210">		assertEquals(923954957346L, (long) config.getLongList(TEST_KEY).get(0));</span>
+<span class="fc" id="L211">		assertEquals(823954957346L, (long) config.getLongList(TEST_KEY).get(1));</span>
+<span class="fc" id="L212">	}</span>
+
+	@Test
+	public void testShortList() throws ConfigurationException {
+<span class="fc" id="L216">		config.setProperty(TEST_KEY, &quot;123, 321&quot;);</span>
+<span class="fc" id="L217">		assertEquals(123, (short) config.getShortList(TEST_KEY).get(0));</span>
+<span class="fc" id="L218">		assertEquals(321, (short) config.getShortList(TEST_KEY).get(1));</span>
+<span class="fc" id="L219">	}</span>
+
+	@Test
+	public void testStringList() throws ConfigurationException {
+<span class="fc" id="L223">		config.setProperty(TEST_KEY, &quot;first,second, third&quot;);</span>
+<span class="fc" id="L224">		assertEquals(&quot;first&quot;, config.getStringList(TEST_KEY).get(0));</span>
+<span class="fc" id="L225">		assertEquals(&quot;second&quot;, config.getStringList(TEST_KEY).get(1));</span>
+<span class="fc" id="L226">		assertEquals(&quot;third&quot;, config.getStringList(TEST_KEY).get(2));</span>
+<span class="fc" id="L227">	}</span>
+
+	@Test
+	public void testGetProperties() {
+<span class="fc" id="L231">		Properties props = config.getProperties();</span>
+<span class="pc bpc" id="L232" title="1 of 2 branches missed.">		assertTrue(props.keySet().size() &gt; 0);</span>
+<span class="fc" id="L233">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingBooleanValueKey() throws ConfigurationException {
+<span class="nc" id="L237">		config.getBooleanValue(TEST_KEY);</span>
+<span class="nc" id="L238">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingBooleanListKey() throws ConfigurationException {
+<span class="nc" id="L242">		config.getBooleanList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L243">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingByteValueKey() throws ConfigurationException {
+<span class="nc" id="L247">		config.getByteValue(TEST_KEY);</span>
+<span class="nc" id="L248">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingByteListKey() throws ConfigurationException {
+<span class="nc" id="L252">		config.getByteList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L253">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingCharValueKey() throws ConfigurationException {
+<span class="nc" id="L257">		config.getCharValue(TEST_KEY);</span>
+<span class="nc" id="L258">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingCharListKey() throws ConfigurationException {
+<span class="nc" id="L262">		config.getCharList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L263">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingDoubleValueKey() throws ConfigurationException {
+<span class="nc" id="L267">		config.getDoubleValue(TEST_KEY);</span>
+<span class="nc" id="L268">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingDoubleListKey() throws ConfigurationException {
+<span class="nc" id="L272">		config.getDoubleList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L273">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingFloatValueKey() throws ConfigurationException {
+<span class="nc" id="L277">		config.getFloatValue(TEST_KEY);</span>
+<span class="nc" id="L278">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingFloatListKey() throws ConfigurationException {
+<span class="nc" id="L282">		config.getFloatList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L283">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingIntValueKey() throws ConfigurationException {
+<span class="nc" id="L287">		config.getIntValue(TEST_KEY);</span>
+<span class="nc" id="L288">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingIntListKey() throws ConfigurationException {
+<span class="nc" id="L292">		config.getBooleanList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L293">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testLongShortValueKey() throws ConfigurationException {
+<span class="nc" id="L297">		config.getShortValue(TEST_KEY);</span>
+<span class="nc" id="L298">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingShortListKey() throws ConfigurationException {
+<span class="nc" id="L302">		config.getShortList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L303">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testLongStringValueKey() throws ConfigurationException {
+<span class="nc" id="L307">		config.getStringValue(TEST_KEY);</span>
+<span class="nc" id="L308">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingStringListKey() throws ConfigurationException {
+<span class="nc" id="L312">		config.getStringList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L313">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testLongBooleanValueKey() throws ConfigurationException {
+<span class="nc" id="L317">		config.getLongValue(TEST_KEY);</span>
+<span class="nc" id="L318">	}</span>
+
+	@Test(expected = ConfigurationException.class)
+	public void testMissingLongListKey() throws ConfigurationException {
+<span class="nc" id="L322">		config.getLongList(TEST_KEY, &quot;!&quot;);</span>
+<span class="nc" id="L323">	}</span>
+
+	@Test
+	public void testSetProperties() throws ConfigurationException {
+<span class="fc" id="L327">		Properties props = new Properties();</span>
+<span class="fc" id="L328">		props.setProperty(TEST_KEY, &quot;value123&quot;);</span>
+<span class="fc" id="L329">		props.setProperty(&quot;Other&quot;, &quot;value&quot;);</span>
+<span class="fc" id="L330">		config.setProperties(props);</span>
+<span class="fc" id="L331">		assertEquals(&quot;value123&quot;, config.getStringValue(TEST_KEY));</span>
+<span class="fc" id="L332">		assertEquals(&quot;value&quot;, config.getStringValue(&quot;Other&quot;));</span>
+<span class="fc" id="L333">	}</span>
+
+	@Test
+	public void testClearProperty() throws ConfigurationException {
+<span class="fc" id="L337">		config.setProperty(TEST_KEY, &quot;!&quot;);</span>
+<span class="fc" id="L338">		assertEquals(&quot;!&quot;, config.getStringValue(TEST_KEY));</span>
+<span class="fc" id="L339">		config.clearProperty(TEST_KEY);</span>
+<span class="fc" id="L340">		assertEquals(&quot;!!!&quot;, config.getStringValue(TEST_KEY, &quot;!!!&quot;));</span>
+<span class="fc" id="L341">	}</span>
+
+	@Test
+	public void testClearMissingProperty() {
+<span class="fc" id="L345">		config.clearProperty(TEST_KEY);</span>
+<span class="fc" id="L346">		assertEquals(&quot;!!&quot;, config.getStringValue(TEST_KEY, &quot;!!&quot;));</span>
+<span class="fc" id="L347">	}</span>
+
+	@After
+	public void tearDown() {
+<span class="fc" id="L351">		config.reset();</span>
+<span class="fc" id="L352">	}</span>
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Confucius (18-Sep-2013 01:26:47)</div></body></html>

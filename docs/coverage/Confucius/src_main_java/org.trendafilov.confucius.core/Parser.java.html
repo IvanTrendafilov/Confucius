@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>Parser.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Confucius (18-Sep-2013 01:26:47)</a> &gt; <a href="../../index.html" class="el_group">Confucius</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.html" class="el_package">org.trendafilov.confucius.core</a> &gt; <span class="el_source">Parser.java</span></div><h1>Parser.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright 2013 Ivan Trendafilov
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.trendafilov.confucius.core;
+
+import java.io.BufferedReader;
+import java.io.ByteArrayInputStream;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+
+class Parser {
+	private final static String DEFAULT_CONTEXT = &quot;Default&quot;;
+	private final static String COMMENT = &quot;#&quot;;
+	private final static String IDENTITY = &quot;=&quot;;
+	private final static String LEFT_CONTEXT = &quot;[&quot;;
+	private final static String RIGHT_CONTEXT = &quot;]&quot;;
+	private final static String LEFT_SUBSTITUTION = &quot;${&quot;;
+	private final static String RIGHT_SUBSTITUTION = &quot;}&quot;;
+
+<span class="fc" id="L40">	private final Map&lt;String, String&gt; configuration = new HashMap&lt;&gt;();</span>
+
+<span class="fc" id="L42">	public Parser(String filename, String context) {</span>
+		try {
+<span class="fc" id="L44">			Collection&lt;String&gt; lines = readLines(filename);</span>
+<span class="fc" id="L45">			parseLegacyFormat(lines);</span>
+<span class="fc" id="L46">			parseContext(lines, DEFAULT_CONTEXT);</span>
+<span class="fc" id="L47">			parseContext(lines, context);</span>
+<span class="fc" id="L48">			parseVariables();</span>
+<span class="fc" id="L49">		} catch (IOException e) {</span>
+<span class="fc" id="L50">			throw new RuntimeConfigurationException(&quot;Unable to read configuration file&quot;, e);</span>
+		}
+<span class="fc" id="L52">	}</span>
+
+	public Map&lt;String, String&gt; getConfiguration() {
+<span class="fc" id="L55">		return configuration;</span>
+	}
+
+	private Collection&lt;String&gt; readLines(String filename) throws IOException {
+<span class="fc" id="L59">		List&lt;String&gt; lines = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L60" title="All 2 branches covered.">		if (filename == null)</span>
+<span class="fc" id="L61">			return lines;</span>
+<span class="fc" id="L62">		BufferedReader br = new BufferedReader(new FileReader(filename));</span>
+		String line;
+<span class="fc bfc" id="L64" title="All 2 branches covered.">		while ((line = br.readLine()) != null)</span>
+<span class="fc" id="L65">			lines.add(line);</span>
+<span class="fc" id="L66">		br.close();</span>
+<span class="fc" id="L67">		return lines;</span>
+	}
+
+	private Map&lt;String, String&gt; parseLine(String line) {
+<span class="fc" id="L71">		Map&lt;String, String&gt; pair = new HashMap&lt;&gt;();</span>
+<span class="fc" id="L72">		String newLine = line.trim();</span>
+<span class="fc bfc" id="L73" title="All 2 branches covered.">		if (line.contains(COMMENT))</span>
+<span class="fc" id="L74">			newLine = newLine.substring(0, line.indexOf(COMMENT)).trim();</span>
+<span class="fc bfc" id="L75" title="All 2 branches covered.">		if (newLine.isEmpty())</span>
+<span class="fc" id="L76">			return pair;</span>
+<span class="fc bfc" id="L77" title="All 2 branches covered.">		if (newLine.contains(IDENTITY)) {</span>
+<span class="fc" id="L78">			String key = newLine.substring(0, newLine.indexOf(IDENTITY)).trim();</span>
+<span class="fc" id="L79">			String value = newLine.substring(newLine.indexOf(IDENTITY) + 1, newLine.length()).trim();</span>
+<span class="fc" id="L80">			pair.put(key, value);</span>
+<span class="fc" id="L81">			return pair;</span>
+		} else {
+<span class="fc" id="L83">			throw new RuntimeConfigurationException(String.format(&quot;Unparsable line: [%s]&quot;, line));</span>
+		}
+	}
+
+	private void parseLegacyFormat(Collection&lt;String&gt; lines) throws IOException {
+<span class="fc" id="L88">		boolean isLegacy = true;</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		for (String line : lines)</span>
+<span class="fc bfc" id="L90" title="All 2 branches covered.">			if (isContext(line))</span>
+<span class="fc" id="L91">				isLegacy = false;</span>
+<span class="fc bfc" id="L92" title="All 2 branches covered.">		if (isLegacy) {</span>
+<span class="fc" id="L93">			StringBuilder lineBuffer = new StringBuilder();</span>
+<span class="fc bfc" id="L94" title="All 2 branches covered.">			for (String line : lines) {</span>
+<span class="fc" id="L95">				lineBuffer.append(line);</span>
+<span class="fc" id="L96">				lineBuffer.append(System.lineSeparator());</span>
+			}
+<span class="fc" id="L98">			Properties props = new Properties();</span>
+<span class="fc" id="L99">			props.load(new ByteArrayInputStream(lineBuffer.toString().getBytes(&quot;UTF-8&quot;)));</span>
+<span class="fc" id="L100">			configuration.putAll(Utils.propertiesToMap(props));</span>
+		}
+<span class="fc" id="L102">	}</span>
+
+	private void parseContext(Collection&lt;String&gt; lines, String context) {
+<span class="fc" id="L105">		boolean insideContext = false;</span>
+<span class="fc bfc" id="L106" title="All 2 branches covered.">		for (String line : lines) {</span>
+<span class="fc bfc" id="L107" title="All 2 branches covered.">			if (isNamedContext(line, context))</span>
+<span class="fc" id="L108">				insideContext = true;</span>
+<span class="fc bfc" id="L109" title="All 4 branches covered.">			else if (insideContext &amp;&amp; isContext(line))</span>
+<span class="fc" id="L110">				insideContext = false;</span>
+<span class="fc bfc" id="L111" title="All 2 branches covered.">			else if (insideContext)</span>
+<span class="fc" id="L112">				configuration.putAll(parseLine(line));</span>
+		}
+<span class="fc" id="L114">	}</span>
+
+	private void parseVariables() {
+<span class="fc" id="L117">		int previousSize = 0;</span>
+<span class="fc" id="L118">		Map&lt;String, String&gt; unresolved = new HashMap&lt;&gt;();</span>
+<span class="fc bfc" id="L119" title="All 2 branches covered.">		for (Entry&lt;String, String&gt; entry : configuration.entrySet())</span>
+<span class="fc bfc" id="L120" title="All 2 branches covered.">			if (isSubstitution(entry.getValue()))</span>
+<span class="fc" id="L121">				unresolved.put(entry.getKey(), getSubstitution(entry.getValue()));</span>
+<span class="fc bfc" id="L122" title="All 2 branches covered.">		while (previousSize != unresolved.size()) {</span>
+<span class="fc" id="L123">			previousSize = unresolved.size();</span>
+<span class="fc" id="L124">			List&lt;String&gt; resolved = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L125" title="All 2 branches covered.">			for (Entry&lt;String, String&gt; entry : unresolved.entrySet())</span>
+<span class="fc bfc" id="L126" title="All 4 branches covered.">				if (configuration.containsKey(entry.getValue()) &amp;&amp; !unresolved.containsKey(entry.getValue())) {</span>
+<span class="fc" id="L127">					resolved.add(entry.getKey());</span>
+<span class="fc" id="L128">					configuration.put(entry.getKey(), configuration.get(entry.getValue()));</span>
+				}
+<span class="fc bfc" id="L130" title="All 2 branches covered.">			for (String item : resolved)</span>
+<span class="fc" id="L131">				unresolved.remove(item);</span>
+		}
+<span class="fc" id="L133">	}</span>
+
+	private boolean isContext(String line) {
+<span class="fc" id="L136">		line = line.trim();</span>
+<span class="pc bpc" id="L137" title="1 of 4 branches missed.">		return line.startsWith(LEFT_CONTEXT) &amp;&amp; line.endsWith(RIGHT_CONTEXT);</span>
+	}
+
+	private boolean isNamedContext(String line, String context) {
+<span class="fc bfc" id="L141" title="All 4 branches covered.">		return context != null &amp;&amp; line.trim().equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);</span>
+	}
+
+	private boolean isSubstitution(String value) {
+<span class="pc bpc" id="L145" title="1 of 4 branches missed.">		return value.startsWith(LEFT_SUBSTITUTION) &amp;&amp; value.endsWith(RIGHT_SUBSTITUTION);</span>
+	}
+
+	private String getSubstitution(String value) {
+<span class="fc" id="L149">		return value.substring(2, value.length() - 1);</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Confucius (18-Sep-2013 01:26:47)</div></body></html>

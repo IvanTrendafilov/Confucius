@@ -1,0 +1,286 @@
+<?xml version="1.0" encoding="UTF-8"?><!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd"><html xmlns="http://www.w3.org/1999/xhtml" lang="en"><head><meta http-equiv="Content-Type" content="text/html;charset=UTF-8"/><link rel="stylesheet" href="../../../.resources/report.css" type="text/css"/><link rel="shortcut icon" href="../../../.resources/report.gif" type="image/gif"/><title>AbstractConfiguration.java</title><link rel="stylesheet" href="../../../.resources/prettify.css" type="text/css"/><script type="text/javascript" src="../../../.resources/prettify.js"></script></head><body onload="window['PR_TAB_WIDTH']=4;prettyPrint()"><div class="breadcrumb" id="breadcrumb"><span class="right"><a href="../../../.sessions.html" class="el_session">Sessions</a></span><a href="../../../index.html" class="el_report">Confucius (18-Sep-2013 01:26:47)</a> &gt; <a href="../../index.html" class="el_group">Confucius</a> &gt; <a href="../index.html" class="el_bundle">src/main/java</a> &gt; <a href="index.html" class="el_package">org.trendafilov.confucius.core</a> &gt; <span class="el_source">AbstractConfiguration.java</span></div><h1>AbstractConfiguration.java</h1><pre class="source lang-java linenums">/* 
+ * Copyright 2013 Ivan Trendafilov
+ *
+ * Licensed under the Apache License, Version 2.0 (the &quot;License&quot;);
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *     http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an &quot;AS IS&quot; BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
+package org.trendafilov.confucius.core;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Properties;
+import java.util.Set;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.trendafilov.confucius.Configurable;
+
+<span class="fc" id="L31">public abstract class AbstractConfiguration implements Configurable {</span>
+<span class="fc" id="L32">	private final static Logger LOG = LoggerFactory.getLogger(AbstractConfiguration.class);</span>
+
+	private final static String ITEM_SEPARATOR = &quot;,&quot;;
+<span class="fc" id="L35">	protected static String FILE_PARAM = &quot;conf.properties&quot;;</span>
+<span class="fc" id="L36">	protected static String CONTEXT_PARAM = &quot;conf.context&quot;;</span>
+
+	private final static String FILE_PATH;
+	private final static String CONTEXT;
+	private final static Map&lt;String, String&gt; INITIAL_STATE;
+
+	static {
+<span class="fc" id="L43">		FILE_PATH = System.getProperty(FILE_PARAM);</span>
+<span class="fc" id="L44">		CONTEXT = System.getProperty(CONTEXT_PARAM);</span>
+<span class="fc" id="L45">		INITIAL_STATE = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));</span>
+<span class="fc" id="L46">	}</span>
+
+	protected void init() {
+<span class="fc" id="L49">		LOG.info(&quot;Initializing configuration...&quot;);</span>
+<span class="fc" id="L50">		setProperties(INITIAL_STATE);</span>
+<span class="fc" id="L51">		setProperties(new Parser(FILE_PATH, CONTEXT).getConfiguration());</span>
+<span class="fc" id="L52">	}</span>
+
+	public Set&lt;String&gt; keySet() {
+<span class="fc" id="L55">		return Utils.propertiesToMap(getProperties()).keySet();</span>
+	}
+
+	public boolean getBooleanValue(String key) throws ConfigurationException {
+<span class="fc" id="L59">		return Boolean.parseBoolean(getKey(key));</span>
+	}
+
+	public boolean getBooleanValue(String key, boolean defaultValue) {
+<span class="fc" id="L63">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L64" title="All 2 branches covered.">		return value == null ? defaultValue : Boolean.parseBoolean(value);</span>
+	}
+
+	public List&lt;Boolean&gt; getBooleanList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L68">		List&lt;Boolean&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L69" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L70">			parts.add(Boolean.parseBoolean(value.trim()));</span>
+<span class="fc" id="L71">		return parts;</span>
+	}
+
+	public List&lt;Boolean&gt; getBooleanList(String key) throws ConfigurationException {
+<span class="fc" id="L75">		return getBooleanList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public byte getByteValue(String key) throws ConfigurationException {
+<span class="fc" id="L79">		return Byte.parseByte(getKey(key));</span>
+	}
+
+	public byte getByteValue(String key, byte defaultValue) {
+<span class="fc" id="L83">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L84" title="All 2 branches covered.">		return value == null ? defaultValue : Byte.parseByte(value);</span>
+	}
+
+	public List&lt;Byte&gt; getByteList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L88">		List&lt;Byte&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L89" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L90">			parts.add(Byte.parseByte(value.trim()));</span>
+<span class="fc" id="L91">		return parts;</span>
+	}
+
+	public List&lt;Byte&gt; getByteList(String key) throws ConfigurationException {
+<span class="fc" id="L95">		return getByteList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public char getCharValue(String key) throws ConfigurationException {
+<span class="fc" id="L99">		return getKey(key).charAt(0);</span>
+	}
+
+	public char getCharValue(String key, char defaultValue) {
+<span class="fc" id="L103">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L104" title="All 2 branches covered.">		return value == null ? defaultValue : value.charAt(0);</span>
+	}
+
+	public List&lt;Character&gt; getCharList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L108">		List&lt;Character&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L109" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L110">			parts.add(value.trim().charAt(0));</span>
+<span class="fc" id="L111">		return parts;</span>
+	}
+
+	public List&lt;Character&gt; getCharList(String key) throws ConfigurationException {
+<span class="fc" id="L115">		return getCharList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public double getDoubleValue(String key) throws ConfigurationException {
+<span class="fc" id="L119">		return Double.parseDouble(getKey(key));</span>
+	}
+
+	public double getDoubleValue(String key, double defaultValue) {
+<span class="fc" id="L123">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L124" title="All 2 branches covered.">		return value == null ? defaultValue : Double.parseDouble(value);</span>
+	}
+
+	public List&lt;Double&gt; getDoubleList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L128">		List&lt;Double&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L129" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L130">			parts.add(Double.parseDouble(value.trim()));</span>
+<span class="fc" id="L131">		return parts;</span>
+	}
+
+	public List&lt;Double&gt; getDoubleList(String key) throws ConfigurationException {
+<span class="fc" id="L135">		return getDoubleList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public float getFloatValue(String key) throws ConfigurationException {
+<span class="fc" id="L139">		return Float.parseFloat(getKey(key));</span>
+	}
+
+	public float getFloatValue(String key, float defaultValue) {
+<span class="fc" id="L143">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L144" title="All 2 branches covered.">		return value == null ? defaultValue : Float.parseFloat(value);</span>
+	}
+
+	public List&lt;Float&gt; getFloatList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L148">		List&lt;Float&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L149" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L150">			parts.add(Float.parseFloat(value.trim()));</span>
+<span class="fc" id="L151">		return parts;</span>
+	}
+
+	public List&lt;Float&gt; getFloatList(String key) throws ConfigurationException {
+<span class="fc" id="L155">		return getFloatList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public int getIntValue(String key) throws ConfigurationException {
+<span class="fc" id="L159">		return Integer.parseInt(getKey(key));</span>
+	}
+
+	public int getIntValue(String key, int defaultValue) {
+<span class="fc" id="L163">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L164" title="All 2 branches covered.">		return value == null ? defaultValue : Integer.parseInt(value);</span>
+	}
+
+	public List&lt;Integer&gt; getIntList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L168">		List&lt;Integer&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L169" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L170">			parts.add(Integer.parseInt(value.trim()));</span>
+<span class="fc" id="L171">		return parts;</span>
+	}
+
+	public List&lt;Integer&gt; getIntList(String key) throws ConfigurationException {
+<span class="fc" id="L175">		return getIntList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public long getLongValue(String key) throws ConfigurationException {
+<span class="fc" id="L179">		return Long.parseLong(getKey(key));</span>
+	}
+
+	public long getLongValue(String key, long defaultValue) {
+<span class="fc" id="L183">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L184" title="All 2 branches covered.">		return value == null ? defaultValue : Long.parseLong(value);</span>
+	}
+
+	public List&lt;Long&gt; getLongList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L188">		List&lt;Long&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L189" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L190">			parts.add(Long.parseLong(value.trim()));</span>
+<span class="fc" id="L191">		return parts;</span>
+	}
+
+	public List&lt;Long&gt; getLongList(String key) throws ConfigurationException {
+<span class="fc" id="L195">		return getLongList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public short getShortValue(String key) throws ConfigurationException {
+<span class="fc" id="L199">		return Short.parseShort(getKey(key));</span>
+	}
+
+	public short getShortValue(String key, short defaultValue) {
+<span class="fc" id="L203">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L204" title="All 2 branches covered.">		return value == null ? defaultValue : Short.parseShort(value);</span>
+	}
+
+	public List&lt;Short&gt; getShortList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L208">		List&lt;Short&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L209" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L210">			parts.add(Short.parseShort(value.trim()));</span>
+<span class="fc" id="L211">		return parts;</span>
+	}
+
+	public List&lt;Short&gt; getShortList(String key) throws ConfigurationException {
+<span class="fc" id="L215">		return getShortList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public String getStringValue(String key) throws ConfigurationException {
+<span class="fc" id="L219">		return getKey(key);</span>
+	}
+
+	public String getStringValue(String key, String defautValue) {
+<span class="fc" id="L223">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L224" title="All 2 branches covered.">		return value == null ? defautValue : value;</span>
+	}
+
+	public List&lt;String&gt; getStringList(String key, String separator) throws ConfigurationException {
+<span class="fc" id="L228">		List&lt;String&gt; parts = new ArrayList&lt;&gt;();</span>
+<span class="fc bfc" id="L229" title="All 2 branches covered.">		for (String value : getKey(key).split(separator))</span>
+<span class="fc" id="L230">			parts.add(value.trim());</span>
+<span class="fc" id="L231">		return parts;</span>
+	}
+
+	public List&lt;String&gt; getStringList(String key) throws ConfigurationException {
+<span class="fc" id="L235">		return getStringList(key, ITEM_SEPARATOR);</span>
+	}
+
+	public Properties getProperties() {
+<span class="fc" id="L239">		return System.getProperties();</span>
+	}
+
+	public synchronized &lt;T&gt; void setProperty(String key, T value) {
+<span class="fc" id="L243">		String item = value.toString();</span>
+<span class="fc" id="L244">		System.setProperty(key, item);</span>
+<span class="fc" id="L245">		LOG.info(&quot;Set configuration property: [{}] =&gt; [{}]&quot;, key, item);</span>
+<span class="fc" id="L246">	}</span>
+
+	public synchronized &lt;T&gt; void setProperties(Map&lt;String, T&gt; properties) {
+<span class="fc bfc" id="L249" title="All 2 branches covered.">		for (Entry&lt;String, T&gt; entry : properties.entrySet())</span>
+<span class="fc" id="L250">			setProperty(entry.getKey(), entry.getValue());</span>
+<span class="fc" id="L251">	}</span>
+
+	public void setProperties(Properties properties) {
+<span class="fc bfc" id="L254" title="All 2 branches covered.">		for (Object e : properties.keySet())</span>
+<span class="fc" id="L255">			setProperty((String) e, properties.getProperty((String) e));</span>
+<span class="fc" id="L256">	}</span>
+
+	public synchronized void clearProperty(String key) {
+<span class="fc" id="L259">		System.clearProperty(key);</span>
+<span class="fc" id="L260">		LOG.info(&quot;Unset configuration property: [{}]&quot;, key);</span>
+<span class="fc" id="L261">	}</span>
+
+	/**
+	 * {@inheritDoc}
+	 * 
+	 * &lt;p&gt;
+	 * The reset procedure restores configuration properties to their initial
+	 * values at the time of creation of the &lt;tt&gt;Configurable&lt;/tt&gt; instance.
+	 * Configuration properties specified via a file are re-processed.
+	 * &lt;/p&gt;
+	 */
+	public synchronized void reset() {
+<span class="fc bfc" id="L273" title="All 2 branches covered.">		for (String key : Utils.propertiesToMap(getProperties()).keySet())</span>
+<span class="fc" id="L274">			clearProperty(key);</span>
+<span class="fc" id="L275">		init();</span>
+<span class="fc" id="L276">		LOG.info(&quot;Configuration properties have been reset&quot;);</span>
+<span class="fc" id="L277">	}</span>
+
+	private String getKey(String key) throws ConfigurationException {
+<span class="fc" id="L280">		String value = System.getProperty(key);</span>
+<span class="fc bfc" id="L281" title="All 2 branches covered.">		if (value == null)</span>
+<span class="fc" id="L282">			throw new ConfigurationException(String.format(&quot;Unable to find configuration value for key [%s]&quot;, key));</span>
+<span class="fc" id="L283">		return value;</span>
+	}
+}
+</pre><div class="footer"><span class="right">Created with <a href="http://www.eclemma.org/jacoco">JaCoCo</a> 0.6.3.201306030806</span>Confucius (18-Sep-2013 01:26:47)</div></body></html>
