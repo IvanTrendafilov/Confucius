@@ -134,7 +134,7 @@ In general, you could also assign variables to other variables and there is no l
 __Q: I need to use a standard existing Java properties file, how do I set this up?__  
 A: You don't need to, the library is smart enough to recognise these. Just set the `conf.properties` property to the file path, as usual.
 
-__Q: Why not just use `java.util.Properties`? __  
+__Q: Why not just use `java.util.Properties`?__  
 A: Confucius aims to fix a lot of the issues present in that class and adds several powerful features, whilst still maintaining the simplicity of the Properties concept and compatibility with existing configuration files.
 
 __Q: Why NoXML? XML is much more expressive and powerful.__  
