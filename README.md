@@ -1,4 +1,4 @@
-Confucius - lightweight Java configuration
+Confucius - lightweight configuration
 ==============================================
 
 Lightweight Java configuration library with a NoXML twist. Confucius is the easiest way to add configuration to your application. It is licensed under the Apache License, Version 2.0.
