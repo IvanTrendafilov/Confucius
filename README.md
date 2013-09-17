@@ -102,7 +102,7 @@ FAQ
 ---
 
 __Q: How do I get the documentation?__  
-A: Ideally, you will be referencing the documentation, as assisted by your IDE. If you need to look at an HTML version of the javadoc, please checkout the project and execute `mvn javadoc:javadoc`.
+A: Ideally, you will be referencing the documentation as assisted by your IDE. If you need to look at an HTML version of the javadoc, please checkout the project and execute `mvn javadoc:javadoc`.
 
 __Q: I want to see configuration information in my log files. How?__  
 A: Confucius exposes logging via SLF4J. To enable it, please place the desired binding on your classpath, [as instructed here](http://www.slf4j.org/manual.html).
@@ -132,7 +132,7 @@ In general, you could also assign variables to other variables and there is no l
 
 
 __Q: I need to use a standard existing Java properties file, how do I set this up?__  
-A: You don't need to, the library is smart enough to recognise these. Just set the `conf.properties` property to the file path, as usual.
+A: There is no special setup required. Just set the `conf.properties` property to the file path, as usual.
 
 __Q: Why not just use `java.util.Properties`?__  
 A: Confucius aims to fix a lot of the issues present in that class and adds several powerful features, whilst still maintaining the simplicity of the Properties concept and compatibility with existing configuration files.
