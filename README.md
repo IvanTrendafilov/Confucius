@@ -1,7 +1,7 @@
 Confucius - lightweight configuration
 ==============================================
 
-A lightweight Java configuration library with a NoXML twist. Confucius is the easiest way to add configuration to your application. It is licensed under the Apache License, Version 2.0.
+A lightweight Java configuration library and a drop-in replacement for `java.util.Properties`. Confucius is the easiest way to add configuration to your application. It is licensed under the Apache License, Version 2.0.
 
 Why use Confucius?
 ------------------
@@ -13,7 +13,7 @@ Why use Confucius?
 * __automatically load__ configuration from a specified Properties file
 * use a single Properties file to __wire multiple app instances via contexts__
 * tiny, yet powerful - __only 16K on disk__
-* a __NoXML__ library - absolutely no XML required (well, unless you use Maven)
+* no XML required
 
 Getting started
 ---------------
