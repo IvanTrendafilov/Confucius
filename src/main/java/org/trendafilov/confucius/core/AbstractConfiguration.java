@@ -51,7 +51,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		setProperties(new Parser(FILE_PATH, CONTEXT).getConfiguration());
 	}
 
-	public Set<String> keySet() {
+	public synchronized Set<String> keySet() {
 		return Utils.propertiesToMap(getProperties()).keySet();
 	}
 
@@ -59,7 +59,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Boolean.parseBoolean(getKey(key));
 	}
 
-	public boolean getBooleanValue(String key, boolean defaultValue) {
+	public synchronized boolean getBooleanValue(String key, boolean defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Boolean.parseBoolean(value);
 	}
@@ -79,7 +79,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Byte.parseByte(getKey(key));
 	}
 
-	public byte getByteValue(String key, byte defaultValue) {
+	public synchronized byte getByteValue(String key, byte defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Byte.parseByte(value);
 	}
@@ -99,7 +99,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return getKey(key).charAt(0);
 	}
 
-	public char getCharValue(String key, char defaultValue) {
+	public synchronized char getCharValue(String key, char defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : value.charAt(0);
 	}
@@ -119,7 +119,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Double.parseDouble(getKey(key));
 	}
 
-	public double getDoubleValue(String key, double defaultValue) {
+	public synchronized double getDoubleValue(String key, double defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Double.parseDouble(value);
 	}
@@ -139,7 +139,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Float.parseFloat(getKey(key));
 	}
 
-	public float getFloatValue(String key, float defaultValue) {
+	public synchronized float getFloatValue(String key, float defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Float.parseFloat(value);
 	}
@@ -159,7 +159,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Integer.parseInt(getKey(key));
 	}
 
-	public int getIntValue(String key, int defaultValue) {
+	public synchronized int getIntValue(String key, int defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Integer.parseInt(value);
 	}
@@ -179,7 +179,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Long.parseLong(getKey(key));
 	}
 
-	public long getLongValue(String key, long defaultValue) {
+	public synchronized long getLongValue(String key, long defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
@@ -199,7 +199,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Short.parseShort(getKey(key));
 	}
 
-	public short getShortValue(String key, short defaultValue) {
+	public synchronized short getShortValue(String key, short defaultValue) {
 		String value = System.getProperty(key);
 		return value == null ? defaultValue : Short.parseShort(value);
 	}
@@ -219,7 +219,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return getKey(key);
 	}
 
-	public String getStringValue(String key, String defautValue) {
+	public synchronized String getStringValue(String key, String defautValue) {
 		String value = System.getProperty(key);
 		return value == null ? defautValue : value;
 	}
@@ -235,7 +235,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return getStringList(key, ITEM_SEPARATOR);
 	}
 
-	public Properties getProperties() {
+	public synchronized Properties getProperties() {
 		return System.getProperties();
 	}
 
@@ -250,7 +250,7 @@ public abstract class AbstractConfiguration implements Configurable {
 			setProperty(entry.getKey(), entry.getValue());
 	}
 
-	public void setProperties(Properties properties) {
+	public synchronized void setProperties(Properties properties) {
 		for (Object e : properties.keySet())
 			setProperty((String) e, properties.getProperty((String) e));
 	}
@@ -276,7 +276,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		LOG.info("Configuration properties have been reset");
 	}
 
-	private String getKey(String key) throws ConfigurationException {
+	private synchronized String getKey(String key) throws ConfigurationException {
 		String value = System.getProperty(key);
 		if (value == null)
 			throw new ConfigurationException(String.format("Unable to find configuration value for key [%s]", key));
