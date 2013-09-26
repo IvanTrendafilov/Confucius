@@ -16,9 +16,9 @@
 
 package org.trendafilov.confucius.core;
 
-public class ConfigurationException extends Exception {
+public class ConfigurationException extends RuntimeException {
 
-	private static final long serialVersionUID = -3389731343192490718L;
+	private static final long serialVersionUID = 2909522377132243053L;
 
 	public ConfigurationException() {
 		super();

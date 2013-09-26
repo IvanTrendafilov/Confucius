@@ -47,12 +47,12 @@ public class ParserTest {
 		assertTrue(new Parser(null, null).getConfiguration().isEmpty());
 	}
 
-	@Test(expected = RuntimeConfigurationException.class)
+	@Test(expected = ConfigurationException.class)
 	public void testMissingConfigFile() {
 		new Parser(FILENAME + "test", null).getConfiguration();
 	}
 
-	@Test(expected = RuntimeConfigurationException.class)
+	@Test(expected = ConfigurationException.class)
 	public void testMissingConfigFileWithContext() {
 		new Parser(FILENAME + "test", TEST_CONTEXT);
 	}
@@ -162,7 +162,7 @@ public class ParserTest {
 		assertEquals("${key2}", configuration.get("key3"));
 	}
 
-	@Test(expected = RuntimeConfigurationException.class)
+	@Test(expected = ConfigurationException.class)
 	public void testUnparsableLine() throws Exception {
 		PrintWriter writer = new PrintWriter(FILENAME, "UTF-8");
 		writer.println("[Default]");

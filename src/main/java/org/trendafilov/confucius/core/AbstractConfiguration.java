@@ -55,7 +55,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		return Utils.propertiesToMap(getProperties()).keySet();
 	}
 
-	public boolean getBooleanValue(String key) throws ConfigurationException {
+	public boolean getBooleanValue(String key) {
 		return Boolean.parseBoolean(getKey(key));
 	}
 
@@ -64,18 +64,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Boolean.parseBoolean(value);
 	}
 
-	public List<Boolean> getBooleanList(String key, String separator) throws ConfigurationException {
+	public List<Boolean> getBooleanList(String key, String separator) {
 		List<Boolean> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Boolean.parseBoolean(value.trim()));
 		return parts;
 	}
 
-	public List<Boolean> getBooleanList(String key) throws ConfigurationException {
+	public List<Boolean> getBooleanList(String key) {
 		return getBooleanList(key, ITEM_SEPARATOR);
 	}
 
-	public byte getByteValue(String key) throws ConfigurationException {
+	public byte getByteValue(String key) {
 		return Byte.parseByte(getKey(key));
 	}
 
@@ -84,18 +84,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Byte.parseByte(value);
 	}
 
-	public List<Byte> getByteList(String key, String separator) throws ConfigurationException {
+	public List<Byte> getByteList(String key, String separator) {
 		List<Byte> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Byte.parseByte(value.trim()));
 		return parts;
 	}
 
-	public List<Byte> getByteList(String key) throws ConfigurationException {
+	public List<Byte> getByteList(String key) {
 		return getByteList(key, ITEM_SEPARATOR);
 	}
 
-	public char getCharValue(String key) throws ConfigurationException {
+	public char getCharValue(String key) {
 		return getKey(key).charAt(0);
 	}
 
@@ -104,18 +104,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : value.charAt(0);
 	}
 
-	public List<Character> getCharList(String key, String separator) throws ConfigurationException {
+	public List<Character> getCharList(String key, String separator) {
 		List<Character> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(value.trim().charAt(0));
 		return parts;
 	}
 
-	public List<Character> getCharList(String key) throws ConfigurationException {
+	public List<Character> getCharList(String key) {
 		return getCharList(key, ITEM_SEPARATOR);
 	}
 
-	public double getDoubleValue(String key) throws ConfigurationException {
+	public double getDoubleValue(String key) {
 		return Double.parseDouble(getKey(key));
 	}
 
@@ -124,18 +124,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Double.parseDouble(value);
 	}
 
-	public List<Double> getDoubleList(String key, String separator) throws ConfigurationException {
+	public List<Double> getDoubleList(String key, String separator) {
 		List<Double> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Double.parseDouble(value.trim()));
 		return parts;
 	}
 
-	public List<Double> getDoubleList(String key) throws ConfigurationException {
+	public List<Double> getDoubleList(String key) {
 		return getDoubleList(key, ITEM_SEPARATOR);
 	}
 
-	public float getFloatValue(String key) throws ConfigurationException {
+	public float getFloatValue(String key) {
 		return Float.parseFloat(getKey(key));
 	}
 
@@ -144,18 +144,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Float.parseFloat(value);
 	}
 
-	public List<Float> getFloatList(String key, String separator) throws ConfigurationException {
+	public List<Float> getFloatList(String key, String separator) {
 		List<Float> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Float.parseFloat(value.trim()));
 		return parts;
 	}
 
-	public List<Float> getFloatList(String key) throws ConfigurationException {
+	public List<Float> getFloatList(String key) {
 		return getFloatList(key, ITEM_SEPARATOR);
 	}
 
-	public int getIntValue(String key) throws ConfigurationException {
+	public int getIntValue(String key) {
 		return Integer.parseInt(getKey(key));
 	}
 
@@ -164,18 +164,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Integer.parseInt(value);
 	}
 
-	public List<Integer> getIntList(String key, String separator) throws ConfigurationException {
+	public List<Integer> getIntList(String key, String separator) {
 		List<Integer> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Integer.parseInt(value.trim()));
 		return parts;
 	}
 
-	public List<Integer> getIntList(String key) throws ConfigurationException {
+	public List<Integer> getIntList(String key) {
 		return getIntList(key, ITEM_SEPARATOR);
 	}
 
-	public long getLongValue(String key) throws ConfigurationException {
+	public long getLongValue(String key) {
 		return Long.parseLong(getKey(key));
 	}
 
@@ -184,18 +184,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Long.parseLong(value);
 	}
 
-	public List<Long> getLongList(String key, String separator) throws ConfigurationException {
+	public List<Long> getLongList(String key, String separator) {
 		List<Long> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Long.parseLong(value.trim()));
 		return parts;
 	}
 
-	public List<Long> getLongList(String key) throws ConfigurationException {
+	public List<Long> getLongList(String key) {
 		return getLongList(key, ITEM_SEPARATOR);
 	}
 
-	public short getShortValue(String key) throws ConfigurationException {
+	public short getShortValue(String key) {
 		return Short.parseShort(getKey(key));
 	}
 
@@ -204,18 +204,18 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defaultValue : Short.parseShort(value);
 	}
 
-	public List<Short> getShortList(String key, String separator) throws ConfigurationException {
+	public List<Short> getShortList(String key, String separator) {
 		List<Short> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(Short.parseShort(value.trim()));
 		return parts;
 	}
 
-	public List<Short> getShortList(String key) throws ConfigurationException {
+	public List<Short> getShortList(String key) {
 		return getShortList(key, ITEM_SEPARATOR);
 	}
 
-	public String getStringValue(String key) throws ConfigurationException {
+	public String getStringValue(String key) {
 		return getKey(key);
 	}
 
@@ -224,14 +224,14 @@ public abstract class AbstractConfiguration implements Configurable {
 		return value == null ? defautValue : value;
 	}
 
-	public List<String> getStringList(String key, String separator) throws ConfigurationException {
+	public List<String> getStringList(String key, String separator) {
 		List<String> parts = new ArrayList<>();
 		for (String value : getKey(key).split(separator))
 			parts.add(value.trim());
 		return parts;
 	}
 
-	public List<String> getStringList(String key) throws ConfigurationException {
+	public List<String> getStringList(String key) {
 		return getStringList(key, ITEM_SEPARATOR);
 	}
 
@@ -276,7 +276,7 @@ public abstract class AbstractConfiguration implements Configurable {
 		LOG.info("Configuration properties have been reset");
 	}
 
-	private synchronized String getKey(String key) throws ConfigurationException {
+	private synchronized String getKey(String key) {
 		String value = System.getProperty(key);
 		if (value == null)
 			throw new ConfigurationException(String.format("Unable to find configuration value for key [%s]", key));

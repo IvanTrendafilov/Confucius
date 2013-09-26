@@ -20,8 +20,6 @@ import java.util.Map;
 import java.util.Properties;
 import java.util.Set;
 
-import org.trendafilov.confucius.core.ConfigurationException;
-
 /**
  * The <tt>Configurable</tt> interface defines the contracts which are exposed
  * publicly via the API to all clients of the framework.
@@ -41,16 +39,15 @@ public interface Configurable {
 
 	/**
 	 * Returns as a {@code boolean} the configuration value to which the
-	 * specified key is mapped, or throws a {@code ConfigurationException} if
-	 * the specified key is missing in the configuration properties.
+	 * specified key is mapped, or throws an unchecked
+	 * {@code ConfigurationException} if the specified key is missing in the
+	 * configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a boolean
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	boolean getBooleanValue(String key) throws ConfigurationException;
+	boolean getBooleanValue(String key);
 
 	/**
 	 * Returns as a {@code boolean} the configuration value to which the
@@ -68,9 +65,9 @@ public interface Configurable {
 	boolean getBooleanValue(String key, boolean defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -78,38 +75,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of boolean values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Boolean> getBooleanList(String key, String separator) throws ConfigurationException;
+	List<Boolean> getBooleanList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of boolean values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Boolean> getBooleanList(String key) throws ConfigurationException;
+	List<Boolean> getBooleanList(String key);
 
 	/**
 	 * Returns as a {@code byte} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a byte
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	byte getByteValue(String key) throws ConfigurationException;
+	byte getByteValue(String key);
 
 	/**
 	 * Returns as a {@code byte} the configuration value to which the specified
@@ -127,9 +118,9 @@ public interface Configurable {
 	byte getByteValue(String key, byte defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -137,38 +128,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of byte values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Byte> getByteList(String key, String separator) throws ConfigurationException;
+	List<Byte> getByteList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of byte values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Byte> getByteList(String key) throws ConfigurationException;
+	List<Byte> getByteList(String key);
 
 	/**
 	 * Returns as a {@code char} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a char
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	char getCharValue(String key) throws ConfigurationException;
+	char getCharValue(String key);
 
 	/**
 	 * Returns as a {@code char} the configuration value to which the specified
@@ -186,9 +171,9 @@ public interface Configurable {
 	char getCharValue(String key, char defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -196,38 +181,33 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of char values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Character> getCharList(String key, String separator) throws ConfigurationException;
+	List<Character> getCharList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of char values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Character> getCharList(String key) throws ConfigurationException;
+	List<Character> getCharList(String key);
 
 	/**
 	 * Returns as a {@code double} the configuration value to which the
-	 * specified key is mapped, or throws a {@code ConfigurationException} if
-	 * the specified key is missing in the configuration properties.
+	 * specified key is mapped, or throws an unchecked
+	 * {@code ConfigurationException} if the specified key is missing in the
+	 * configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a double
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	double getDoubleValue(String key) throws ConfigurationException;
+	double getDoubleValue(String key);
 
 	/**
 	 * Returns as a {@code double} the configuration value to which the
@@ -245,9 +225,9 @@ public interface Configurable {
 	double getDoubleValue(String key, double defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -255,38 +235,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of double values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Double> getDoubleList(String key, String separator) throws ConfigurationException;
+	List<Double> getDoubleList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of double values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Double> getDoubleList(String key) throws ConfigurationException;
+	List<Double> getDoubleList(String key);
 
 	/**
 	 * Returns as a {@code float} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a float
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	float getFloatValue(String key) throws ConfigurationException;
+	float getFloatValue(String key);
 
 	/**
 	 * Returns as a {@code float} the configuration value to which the specified
@@ -304,9 +278,9 @@ public interface Configurable {
 	float getFloatValue(String key, float defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -314,38 +288,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of float values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Float> getFloatList(String key, String separator) throws ConfigurationException;
+	List<Float> getFloatList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of float values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Float> getFloatList(String key) throws ConfigurationException;
+	List<Float> getFloatList(String key);
 
 	/**
 	 * Returns as an {@code int} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as an int
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	int getIntValue(String key) throws ConfigurationException;
+	int getIntValue(String key);
 
 	/**
 	 * Returns as an {@code int} the configuration value to which the specified
@@ -363,9 +331,9 @@ public interface Configurable {
 	int getIntValue(String key, int defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -373,38 +341,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of int values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Integer> getIntList(String key, String separator) throws ConfigurationException;
+	List<Integer> getIntList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of int values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Integer> getIntList(String key) throws ConfigurationException;
+	List<Integer> getIntList(String key);
 
 	/**
 	 * Returns as a {@code long} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a long
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	long getLongValue(String key) throws ConfigurationException;
+	long getLongValue(String key);
 
 	/**
 	 * Returns as a {@code long} the configuration value to which the specified
@@ -422,9 +384,9 @@ public interface Configurable {
 	long getLongValue(String key, long defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -432,38 +394,32 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of long values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Long> getLongList(String key, String separator) throws ConfigurationException;
+	List<Long> getLongList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of long values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Long> getLongList(String key) throws ConfigurationException;
+	List<Long> getLongList(String key);
 
 	/**
 	 * Returns as a {@code short} the configuration value to which the specified
-	 * key is mapped, or throws a {@code ConfigurationException} if the
-	 * specified key is missing in the configuration properties.
+	 * key is mapped, or throws an unchecked {@code ConfigurationException} if
+	 * the specified key is missing in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a short
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	short getShortValue(String key) throws ConfigurationException;
+	short getShortValue(String key);
 
 	/**
 	 * Returns as a {@code short} the configuration value to which the specified
@@ -481,9 +437,9 @@ public interface Configurable {
 	short getShortValue(String key, short defaultValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -491,38 +447,33 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of short values, as separated on the <b>separator</b>
 	 *         regular expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Short> getShortList(String key, String separator) throws ConfigurationException;
+	List<Short> getShortList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of short values, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<Short> getShortList(String key) throws ConfigurationException;
+	List<Short> getShortList(String key);
 
 	/**
 	 * Returns as a {@link String} the configuration value to which the
-	 * specified key is mapped, or throws a {@code ConfigurationException} if
-	 * the specified key is missing in the configuration properties.
+	 * specified key is mapped, or throws an unchecked
+	 * {@code ConfigurationException} if the specified key is missing in the
+	 * configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return associated value as a String
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	String getStringValue(String key) throws ConfigurationException;
+	String getStringValue(String key);
 
 	/**
 	 * Returns as a {@link String} the configuration value to which the
@@ -540,9 +491,9 @@ public interface Configurable {
 	String getStringValue(String key, String defautValue);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties.
 	 * 
 	 * @param key
 	 *            of the configuration property
@@ -550,25 +501,21 @@ public interface Configurable {
 	 *            regular expression
 	 * @return a list of strings, as separated on the <b>separator</b> regular
 	 *         expression
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<String> getStringList(String key, String separator) throws ConfigurationException;
+	List<String> getStringList(String key, String separator);
 
 	/**
-	 * Returns a List of values mapped to the specified key, or throws a
-	 * {@code ConfigurationException} if the specified key is missing in the
-	 * configuration properties. Uses the comma character ("<b>,</b>") as the
-	 * regular expression for separation of items.
+	 * Returns a List of values mapped to the specified key, or throws an
+	 * unchecked {@code ConfigurationException} if the specified key is missing
+	 * in the configuration properties. Uses the comma character ("<b>,</b>") as
+	 * the regular expression for separation of items.
 	 * 
 	 * @param key
 	 *            of the configuration property
 	 * @return a list of strings, as separated on the comma character
 	 *         ("<b>,</b>")
-	 * @throws ConfigurationException
-	 *             if the map does not contain the key
 	 */
-	List<String> getStringList(String key) throws ConfigurationException;
+	List<String> getStringList(String key);
 
 	/**
 	 * Returns the current configuration properties.

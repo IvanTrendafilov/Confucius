@@ -17,9 +17,10 @@
 package org.trendafilov.confucius.core;
 
 import java.io.BufferedReader;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.FileReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -42,12 +43,15 @@ class Parser {
 	public Parser(String filename, String context) {
 		try {
 			Collection<String> lines = readLines(filename);
-			parseLegacyFormat(lines);
-			parseContext(lines, DEFAULT_CONTEXT);
-			parseContext(lines, context);
+			if (filename != null && isStandardProps(lines)) {
+				loadStandardProps(filename);
+			} else {
+				parseContext(lines, DEFAULT_CONTEXT);
+				parseContext(lines, context);
+			}
 			parseVariables();
 		} catch (IOException e) {
-			throw new RuntimeConfigurationException("Unable to read configuration file", e);
+			throw new ConfigurationException("Unable to read configuration file", e);
 		}
 	}
 
@@ -80,25 +84,22 @@ class Parser {
 			pair.put(key, value);
 			return pair;
 		} else {
-			throw new RuntimeConfigurationException(String.format("Unparsable line: [%s]", line));
+			throw new ConfigurationException(String.format("Unparsable line: [%s]", line));
 		}
 	}
 
-	private void parseLegacyFormat(Collection<String> lines) throws IOException {
-		boolean isLegacy = true;
+	private boolean isStandardProps(Collection<String> lines) {
 		for (String line : lines)
 			if (isContext(line))
-				isLegacy = false;
-		if (isLegacy) {
-			StringBuilder lineBuffer = new StringBuilder();
-			for (String line : lines) {
-				lineBuffer.append(line);
-				lineBuffer.append(System.lineSeparator());
-			}
-			Properties props = new Properties();
-			props.load(new ByteArrayInputStream(lineBuffer.toString().getBytes("UTF-8")));
-			configuration.putAll(Utils.propertiesToMap(props));
-		}
+				return false;
+		return true;
+	}
+	
+	private void loadStandardProps(String filename) throws IOException {
+		Properties props = new Properties();
+		InputStream input = new FileInputStream(filename);
+		props.load(input);
+		configuration.putAll(Utils.propertiesToMap(props));
 	}
 
 	private void parseContext(Collection<String> lines, String context) {
