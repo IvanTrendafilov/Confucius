@@ -26,7 +26,7 @@ First, you need the Confucius jar file on your classpath. Confucius is available
     <dependency>
         <groupId>org.trendafilov.confucius</groupId>
         <artifactId>confucius</artifactId>
-        <version>1.1</version>
+        <version>1.2</version>
     </dependency>
 ```
 
