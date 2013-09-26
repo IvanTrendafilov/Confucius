@@ -525,7 +525,7 @@ public interface Configurable {
 	 * @see java.lang.System#getProperties()
 	 * @see java.util.Properties
 	 */
-	public Properties getProperties();
+	Properties getProperties();
 
 	/**
 	 * Sets the configuration property indicated by the specified key.
@@ -561,7 +561,7 @@ public interface Configurable {
 	 * @see java.util.Properties
 	 * @see java.lang.System#setProperties(Properties)
 	 */
-	public void setProperties(Properties properties);
+	void setProperties(Properties properties);
 
 	/**
 	 * Removes the configuration property indicated by the specified key.
