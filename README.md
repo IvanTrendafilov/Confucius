@@ -20,7 +20,7 @@ Getting started
 
 Four steps are required to get started with Confucius.
 
-First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or manually download, if need be):
+First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or [manually download](http://search.maven.org/#browse%7C-1223695428), if need be):
 
 ```xml
     <dependency>
@@ -58,7 +58,6 @@ Third, reference the configuration keys in your code.
 package org.trendafilov.confucius.examples.bagels;
 
 import org.trendafilov.confucius.*;
-import org.trendafilov.confucius.core.ConfigurationException;
 
 public class BagelShop {
     
@@ -135,7 +134,7 @@ __Q: I need to use a standard existing Java properties file, how do I set this u
 A: There is no special setup required. Just set the `conf.properties` property to the file path, as usual.
 
 __Q: Why not just use `java.util.Properties`?__  
-A: Confucius aims to fix a lot of the issues present in that class and adds several powerful features, whilst still maintaining the simplicity of the Properties concept and compatibility with existing configuration files.
+A: Confucius aims to fix a lot of the issues present in that class (extends Hashtable, no clean way to interpolate with a HashMap, doesn't use generics, manual type conversions required, and so on) and adds several powerful features, whilst still maintaining the simplicity of the Properties concept and compatibility with existing configuration files.
 
 __Q: Why NoXML? XML is much more expressive and powerful.__  
 A: Indeed, it is! XML is a great tool for the right tasks. Nevertheless, for the vast majority of applications, XML configuration adds more complexity than value. This results in configuration files which are difficult to understand, cumbersome to update, and hard to maintain. For example, if we were to translate the Confucius properties file from the example above to XML, we might end up with something like this:
