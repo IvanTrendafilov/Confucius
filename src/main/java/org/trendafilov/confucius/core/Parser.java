@@ -16,11 +16,12 @@
 
 package org.trendafilov.confucius.core;
 
-import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
@@ -43,7 +44,7 @@ class Parser {
 	public Parser(String filename, String context) {
 		try {
 			Collection<String> lines = readLines(filename);
-			if (filename != null && isStandardProps(lines)) {
+			if (!lines.isEmpty() && isStandardProps(lines)) {
 				loadStandardProps(filename);
 			} else {
 				parseContext(lines, DEFAULT_CONTEXT);
@@ -60,15 +61,7 @@ class Parser {
 	}
 
 	private Collection<String> readLines(String filename) throws IOException {
-		List<String> lines = new ArrayList<>();
-		if (filename == null)
-			return lines;
-		BufferedReader br = new BufferedReader(new FileReader(filename));
-		String line;
-		while ((line = br.readLine()) != null)
-			lines.add(line);
-		br.close();
-		return lines;
+		return filename == null ? new ArrayList<String>() : Files.readAllLines(new File(filename).toPath(), Charset.forName("UTF-8"));
 	}
 
 	private Map<String, String> parseLine(String line) {
@@ -94,7 +87,7 @@ class Parser {
 				return false;
 		return true;
 	}
-	
+
 	private void loadStandardProps(String filename) throws IOException {
 		Properties props = new Properties();
 		InputStream input = new FileInputStream(filename);
