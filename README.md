@@ -52,7 +52,7 @@ Note: the `SF` context is missing the `bagels` key. This is intentional and will
 
 Third, reference the configuration keys in your code.
 
-**Example.java**:
+**BagelShop.java**:
 
 ```java
 package org.trendafilov.confucius.examples.bagels;
