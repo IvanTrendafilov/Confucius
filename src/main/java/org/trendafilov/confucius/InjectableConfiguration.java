@@ -36,12 +36,10 @@ import org.trendafilov.confucius.core.AbstractConfiguration;
 public class InjectableConfiguration extends AbstractConfiguration {
 
 	public InjectableConfiguration() {
-		super.init();
+		super();
 	}
-
+	
 	public InjectableConfiguration(String filePath, String context) {
-		setProperty(FILE_PARAM, filePath);
-		setProperty(CONTEXT_PARAM, context);
-		super.init();
+		super(filePath, context);
 	}
 }

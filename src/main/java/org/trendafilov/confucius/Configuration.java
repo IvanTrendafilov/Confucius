@@ -33,7 +33,7 @@ public class Configuration extends AbstractConfiguration {
 	private static volatile Configuration instance = null;
 
 	private Configuration() {
-		super.init();
+		super();
 	}
 
 	public static Configuration getInstance() {

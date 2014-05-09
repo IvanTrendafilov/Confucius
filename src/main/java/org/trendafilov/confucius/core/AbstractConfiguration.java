@@ -35,22 +35,35 @@ public abstract class AbstractConfiguration implements Configurable {
 	protected static String FILE_PARAM = "conf.properties";
 	protected static String CONTEXT_PARAM = "conf.context";
 
-	private final static String FILE_PATH;
-	private final static String CONTEXT;
-	private final static Map<String, String> INITIAL_STATE;
-
-	static {
-		FILE_PATH = System.getProperty(FILE_PARAM);
-		CONTEXT = System.getProperty(CONTEXT_PARAM);
-		INITIAL_STATE = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
+	private final String filePath;
+	private final String context;
+	private final Map<String, String> initialState;
+	
+	public AbstractConfiguration() {
+		this.filePath = System.getProperty(FILE_PARAM);
+		this.context = System.getProperty(CONTEXT_PARAM);
+		this.initialState = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
+		init();
+	}
+	
+	public AbstractConfiguration(String filePath, String context) {
+		if (filePath == null)
+			throw new ConfigurationException("filePath cannot be null. Use no arg constructor instead.");
+		if (context != null)
+			setProperty(CONTEXT_PARAM, context);
+		setProperty(FILE_PARAM, filePath);
+		this.filePath = filePath;
+		this.context = context;
+		this.initialState = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
+		init();
 	}
 
-	protected void init() {
+	private void init() {
 		LOG.info("Initializing configuration...");
-		setProperties(INITIAL_STATE);
-		setProperties(new Parser(FILE_PATH, CONTEXT).getConfiguration());
+		setProperties(initialState);
+		setProperties(new Parser(filePath, context).getConfiguration());
 	}
-
+	
 	public synchronized Set<String> keySet() {
 		return Utils.propertiesToMap(getProperties()).keySet();
 	}
