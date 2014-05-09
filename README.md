@@ -13,20 +13,20 @@ Why use Confucius?
 * __automatically load__ configuration from a specified Properties file
 * use a single Properties file to __wire multiple app instances via contexts__
 * tiny, yet powerful - __only 16K on disk__
-* no XML required
+* no XML required... unless you use Maven
 
 Getting started
 ---------------
 
 Four steps are required to get started with Confucius.
 
-First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or [manually download](http://search.maven.org/#browse%7C-1223695428), if need be):
+First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or [manually download](http://search.maven.org/#browse%7C849733401), if need be):
 
 ```xml
     <dependency>
         <groupId>org.trendafilov.confucius</groupId>
         <artifactId>confucius</artifactId>
-        <version>1.2</version>
+        <version>1.2.1</version>
     </dependency>
 ```
 

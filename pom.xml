@@ -7,7 +7,7 @@
 	</parent>
 	<groupId>org.trendafilov.confucius</groupId>
 	<artifactId>confucius</artifactId>
-	<version>1.2.1</version>
+	<version>1.3-SNAPSHOT</version>
 	<description>A NoXML, lightweight configuration library</description>
 	<url>http://github.com/IvanTrendafilov/Confucius</url>
 	<licenses>
