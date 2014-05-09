@@ -23,6 +23,7 @@ import org.junit.Test;
 
 public class InjectableConfigurationTest {
 	private final static String TEST_CONTEXT = "Test2";
+	private final static String TEST_CFG_FILE = "some-file.cfg";
 
 	@Test
 	public void sanityCheck() {
@@ -32,8 +33,9 @@ public class InjectableConfigurationTest {
 
 	@Test
 	public void testTwoArgsConstructor() {
-		InjectableConfiguration config = new InjectableConfiguration("some-file.cfg", TEST_CONTEXT);
+		InjectableConfiguration config = new InjectableConfiguration(TEST_CFG_FILE, TEST_CONTEXT);
 		assertFalse(config.keySet().isEmpty());
 		assertEquals(TEST_CONTEXT, config.getStringValue("conf.context"));
+		assertEquals(TEST_CFG_FILE, config.getStringValue("conf.properties"));
 	}
 }
