@@ -16,19 +16,9 @@
 
 package org.trendafilov.confucius.core;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 class Parser {
 	private final static String DEFAULT_CONTEXT = "Default";
@@ -41,27 +31,24 @@ class Parser {
 
 	private final Map<String, String> configuration = new HashMap<>();
 
-	public Parser(String filename, String context) {
-		try {
-			Collection<String> lines = readLines(filename);
-			if (!lines.isEmpty() && isStandardProps(lines)) {
-				loadStandardProps(filename);
-			} else {
-				parseContext(lines, DEFAULT_CONTEXT);
-				parseContext(lines, context);
-			}
-			parseVariables();
-		} catch (IOException e) {
-			throw new ConfigurationException("Unable to read configuration file", e);
-		}
-	}
+    public Parser(ConfigurationDataProvider configurationDataProvider, String context) {
+        try {
+            Collection<String> lines = configurationDataProvider.getAllLines();
+            if (!lines.isEmpty() && isStandardProps(lines)) {
+                loadStandardProps(configurationDataProvider);
+            } else {
+                parseContext(lines, DEFAULT_CONTEXT);
+                parseContext(lines, context);
+            }
+            parseVariables();
 
-	public Map<String, String> getConfiguration() {
-		return configuration;
-	}
+        } catch (IOException e) {
+            throw new ConfigurationException("Unable to read configuration", e);
+        }
+    }
 
-	private Collection<String> readLines(String filename) throws IOException {
-		return filename == null ? new ArrayList<String>() : Files.readAllLines(new File(filename).toPath(), Charset.forName("UTF-8"));
+    public Map<String, String> getConfiguration() {
+        return configuration;
 	}
 
 	private Map<String, String> parseLine(String line) {
@@ -88,12 +75,11 @@ class Parser {
 		return true;
 	}
 
-	private void loadStandardProps(String filename) throws IOException {
-		Properties props = new Properties();
-		InputStream input = new FileInputStream(filename);
-		props.load(input);
-		configuration.putAll(Utils.propertiesToMap(props));
-	}
+    private void loadStandardProps(ConfigurationDataProvider provider) throws IOException {
+        Properties props = new Properties();
+        props.load(provider.getInputStream());
+        configuration.putAll(Utils.propertiesToMap(props));
+    }
 
 	private void parseContext(Collection<String> lines, String context) {
 		boolean insideContext = false;

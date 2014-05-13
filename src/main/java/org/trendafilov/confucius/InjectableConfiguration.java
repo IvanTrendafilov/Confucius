@@ -18,28 +18,35 @@ package org.trendafilov.confucius;
 
 import org.trendafilov.confucius.core.AbstractConfiguration;
 
+import java.io.InputStream;
+
 /**
  * It is intended that this class will be used by Dependency Injection
  * frameworks to allow clients to control the scope of a <tt>Configurable</tt>
  * singleton.
- * 
+ * <p/>
  * <p>
  * This is required, as the scope of a singleton instance in a DI container may
  * differ from the scope of a self-managed singleton instance.
  * </p>
- * 
+ *
  * @author Ivan Trendafilov
- * @since  1.0
- * @see    Configurable
- * @see    Configuration
+ * @see Configurable
+ * @see Configuration
+ * @since 1.0
  */
 public class InjectableConfiguration extends AbstractConfiguration {
 
-	public InjectableConfiguration() {
-		super();
-	}
-	
-	public InjectableConfiguration(String filePath, String context) {
-		super(filePath, context);
-	}
+    public InjectableConfiguration() {
+        super();
+    }
+
+    public InjectableConfiguration(String filePath, String context) {
+        super(filePath, context);
+    }
+
+    public InjectableConfiguration(InputStream inputStream, String context) {
+        super(inputStream, context);
+    }
+
 }
