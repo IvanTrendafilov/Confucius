@@ -28,8 +28,9 @@ class Parser {
 	private final static String RIGHT_CONTEXT = "]";
 	private final static String LEFT_SUBSTITUTION = "${";
 	private final static String RIGHT_SUBSTITUTION = "}";
+    private final static String INHERITANCE = ":";
 
-	private final Map<String, String> configuration = new HashMap<>();
+    private final Map<String, String> configuration = new HashMap<>();
 
     public Parser(ConfigurationDataProvider configurationDataProvider, String context) {
         try {
@@ -37,14 +38,40 @@ class Parser {
             if (!lines.isEmpty() && isStandardProps(lines)) {
                 loadStandardProps(configurationDataProvider);
             } else {
-                parseContext(lines, DEFAULT_CONTEXT);
-                parseContext(lines, context);
+                List<String> contextPath = gatherInheritancePath(context, lines);
+                Collections.reverse(contextPath);
+                for (String contextToParse : contextPath) {
+                    parseContext(lines, contextToParse);
+                }
             }
             parseVariables();
 
         } catch (IOException e) {
             throw new ConfigurationException("Unable to read configuration", e);
         }
+    }
+
+
+    private List<String> gatherInheritancePath(String context, Collection<String> lines) {
+        List<String> path = new ArrayList<>();
+
+        if (DEFAULT_CONTEXT.equalsIgnoreCase(context)) {
+            path.add(DEFAULT_CONTEXT);
+        } else {
+            for (String line : lines) {
+                if (isContext(line) && isNamedContext(line, context)) {
+                    path.add(context);
+                    String parent = getParentWithoutContext(line);
+                    path.addAll(gatherInheritancePath(parent, lines));
+                }
+            }
+        }
+
+        if (path.isEmpty()) {
+            path.add(DEFAULT_CONTEXT);
+        }
+
+        return path;
     }
 
     public Map<String, String> getConfiguration() {
@@ -118,10 +145,28 @@ class Parser {
 	}
 
 	private boolean isNamedContext(String line, String context) {
-		return context != null && line.trim().equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);
-	}
+        return context != null && getContextWithoutParent(line).equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);
+    }
 
-	private boolean isSubstitution(String value) {
+    private String getContextWithoutParent(String line) {
+        if (!line.contains(INHERITANCE)) {
+            return line.trim();
+        }
+        String[] parts = line.split(INHERITANCE);
+        return parts[0].trim() + "]";
+    }
+
+    private String getParentWithoutContext(String line) {
+        if (!line.contains(INHERITANCE)) {
+            return DEFAULT_CONTEXT;
+        }
+
+        String[] parts = line.split(INHERITANCE);
+        return parts[1].trim().substring(0, parts[1].indexOf(RIGHT_CONTEXT)).trim();
+
+    }
+
+    private boolean isSubstitution(String value) {
 		return value.startsWith(LEFT_SUBSTITUTION) && value.endsWith(RIGHT_SUBSTITUTION);
 	}
 

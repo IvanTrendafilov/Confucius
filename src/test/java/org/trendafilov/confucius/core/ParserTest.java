@@ -19,10 +19,7 @@ package org.trendafilov.confucius.core;
 import org.junit.After;
 import org.junit.Test;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.PrintWriter;
-import java.io.UnsupportedEncodingException;
+import java.io.*;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -229,7 +226,40 @@ public class ParserTest {
         assertEquals("https://www.google.com/fp=dfc3525e9a3b356a&q=hello&safe=off/", configuration.get("key"));
     }
 
-	private void createFile(Map<String, String> defaultPairs, String contextName, Map<String, String> contextPairs) {
+    @Test
+    public void testInheritance() throws UnsupportedEncodingException {
+        StringBuilder conf = new StringBuilder("[Default]\n");
+        conf.append("key123=value123\n");
+        conf.append("[Section : Default ]\n");
+        conf.append("key123=value345\n");
+        InputStream inputStream = new ByteArrayInputStream(conf.toString().getBytes("UTF-8"));
+
+        StreamConfigurationDataProvider provider = new StreamConfigurationDataProvider(inputStream);
+
+        Map<String, String> configuration = new Parser(provider, "Section").getConfiguration();
+
+        assertEquals("value345", configuration.get("key123"));
+    }
+
+    @Test
+    public void testInheritanceWithBrokenParent() throws UnsupportedEncodingException {
+        StringBuilder conf = new StringBuilder("[Default]\n");
+        conf.append("key123=value123\n");
+        conf.append("[Broken:InvalidParent]\n");
+        conf.append("key345=value345\n");
+
+        InputStream inputStream = new ByteArrayInputStream(conf.toString().getBytes("UTF-8"));
+
+        StreamConfigurationDataProvider provider = new StreamConfigurationDataProvider(inputStream);
+
+        Map<String, String> configuration = new Parser(provider, "Broken").getConfiguration();
+
+        assertEquals("value123", configuration.get("key123"));
+        assertEquals("value345", configuration.get("key345"));
+    }
+
+
+    private void createFile(Map<String, String> defaultPairs, String contextName, Map<String, String> contextPairs) {
 		try {
 			PrintWriter writer = new PrintWriter(FILENAME, "UTF-8");
 			writer.println("[Default]");
