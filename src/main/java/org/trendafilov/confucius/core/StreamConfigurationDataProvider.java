@@ -2,6 +2,7 @@ package org.trendafilov.confucius.core;
 
 import org.apache.commons.io.IOUtils;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.StringWriter;
@@ -25,6 +26,8 @@ public class StreamConfigurationDataProvider implements ConfigurationDataProvide
         StringWriter writer = new StringWriter();
         IOUtils.copy(inputStream, writer, "UTF-8");
         String configurationString = writer.toString();
+
+        this.inputStream = new ByteArrayInputStream(configurationString.getBytes("UTF-8"));
         return new ArrayList<>(Arrays.asList(configurationString.split("\\r?\\n")));
     }
 

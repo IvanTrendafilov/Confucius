@@ -1,6 +1,7 @@
 package org.trendafilov.confucius.core;
 
 import junit.framework.TestCase;
+import org.apache.commons.io.IOUtils;
 import org.junit.Test;
 
 import java.io.ByteArrayInputStream;
@@ -15,7 +16,7 @@ public class StreamConfigurationDataProviderTest extends TestCase {
         InputStream inputStream = new ByteArrayInputStream("contents".getBytes("UTF-8"));
 
         StreamConfigurationDataProvider provider = new StreamConfigurationDataProvider(inputStream);
-        assertSame(inputStream, provider.getInputStream());
+        assertEquals("contents", IOUtils.toString(provider.getInputStream(), "UTF-8"));
     }
 
     @Test
@@ -38,4 +39,13 @@ public class StreamConfigurationDataProviderTest extends TestCase {
         assertEquals("b", lines.get(1));
         assertEquals("c", lines.get(2));
     }
+
+    @Test
+    public void testResettingStreamAfterGetAllLines() throws IOException {
+        InputStream inputStream = new ByteArrayInputStream("contents".getBytes("UTF-8"));
+        StreamConfigurationDataProvider provider = new StreamConfigurationDataProvider(inputStream);
+        provider.getAllLines();
+        assertEquals("contents", IOUtils.toString(provider.getInputStream(), "UTF-8"));
+    }
+
 }
