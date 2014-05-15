@@ -16,19 +16,9 @@
 
 package org.trendafilov.confucius.core;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 class Parser {
 	private final static String DEFAULT_CONTEXT = "Default";
@@ -38,30 +28,54 @@ class Parser {
 	private final static String RIGHT_CONTEXT = "]";
 	private final static String LEFT_SUBSTITUTION = "${";
 	private final static String RIGHT_SUBSTITUTION = "}";
+    private final static String INHERITANCE = ":";
 
-	private final Map<String, String> configuration = new HashMap<>();
+    private final Map<String, String> configuration = new HashMap<>();
 
-	public Parser(String filename, String context) {
-		try {
-			Collection<String> lines = readLines(filename);
-			if (!lines.isEmpty() && isStandardProps(lines)) {
-				loadStandardProps(filename);
-			} else {
-				parseContext(lines, DEFAULT_CONTEXT);
-				parseContext(lines, context);
-			}
-			parseVariables();
-		} catch (IOException e) {
-			throw new ConfigurationException("Unable to read configuration file", e);
-		}
-	}
+    public Parser(ConfigurationDataProvider configurationDataProvider, String context) {
+        try {
+            Collection<String> lines = configurationDataProvider.getAllLines();
+            if (!lines.isEmpty() && isStandardProps(lines)) {
+                loadStandardProps(configurationDataProvider);
+            } else {
+                List<String> contextPath = gatherInheritancePath(context, lines);
+                Collections.reverse(contextPath);
+                for (String contextToParse : contextPath) {
+                    parseContext(lines, contextToParse);
+                }
+            }
+            parseVariables();
 
-	public Map<String, String> getConfiguration() {
-		return configuration;
-	}
+        } catch (IOException e) {
+            throw new ConfigurationException("Unable to read configuration", e);
+        }
+    }
 
-	private Collection<String> readLines(String filename) throws IOException {
-		return filename == null ? new ArrayList<String>() : Files.readAllLines(new File(filename).toPath(), Charset.forName("UTF-8"));
+
+    private List<String> gatherInheritancePath(String context, Collection<String> lines) {
+        List<String> path = new ArrayList<>();
+
+        if (DEFAULT_CONTEXT.equalsIgnoreCase(context)) {
+            path.add(DEFAULT_CONTEXT);
+        } else {
+            for (String line : lines) {
+                if (isContext(line) && isNamedContext(line, context)) {
+                    path.add(context);
+                    String parent = getParentWithoutContext(line);
+                    path.addAll(gatherInheritancePath(parent, lines));
+                }
+            }
+        }
+
+        if (path.isEmpty()) {
+            path.add(DEFAULT_CONTEXT);
+        }
+
+        return path;
+    }
+
+    public Map<String, String> getConfiguration() {
+        return configuration;
 	}
 
 	private Map<String, String> parseLine(String line) {
@@ -88,12 +102,11 @@ class Parser {
 		return true;
 	}
 
-	private void loadStandardProps(String filename) throws IOException {
-		Properties props = new Properties();
-		InputStream input = new FileInputStream(filename);
-		props.load(input);
-		configuration.putAll(Utils.propertiesToMap(props));
-	}
+    private void loadStandardProps(ConfigurationDataProvider provider) throws IOException {
+        Properties props = new Properties();
+        props.load(provider.getInputStream());
+        configuration.putAll(Utils.propertiesToMap(props));
+    }
 
 	private void parseContext(Collection<String> lines, String context) {
 		boolean insideContext = false;
@@ -132,10 +145,28 @@ class Parser {
 	}
 
 	private boolean isNamedContext(String line, String context) {
-		return context != null && line.trim().equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);
-	}
+        return context != null && getContextWithoutParent(line).equalsIgnoreCase(LEFT_CONTEXT + context + RIGHT_CONTEXT);
+    }
 
-	private boolean isSubstitution(String value) {
+    private String getContextWithoutParent(String line) {
+        if (!line.contains(INHERITANCE)) {
+            return line.trim();
+        }
+        String[] parts = line.split(INHERITANCE);
+        return parts[0].trim() + "]";
+    }
+
+    private String getParentWithoutContext(String line) {
+        if (!line.contains(INHERITANCE)) {
+            return DEFAULT_CONTEXT;
+        }
+
+        String[] parts = line.split(INHERITANCE);
+        return parts[1].trim().substring(0, parts[1].indexOf(RIGHT_CONTEXT)).trim();
+
+    }
+
+    private boolean isSubstitution(String value) {
 		return value.startsWith(LEFT_SUBSTITUTION) && value.endsWith(RIGHT_SUBSTITUTION);
 	}
 
