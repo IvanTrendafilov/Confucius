@@ -16,19 +16,9 @@
 
 package org.trendafilov.confucius.core;
 
-import java.io.File;
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.nio.charset.Charset;
-import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.Map.Entry;
-import java.util.Properties;
 
 class Parser {
 	private final static String DEFAULT_CONTEXT = "Default";
@@ -41,27 +31,23 @@ class Parser {
 
 	private final Map<String, String> configuration = new HashMap<>();
 
-	public Parser(String filename, String context) {
+	public Parser(ConfigurationDataProvider configurationDataProvider, String context) {
 		try {
-			Collection<String> lines = readLines(filename);
+			Collection<String> lines = configurationDataProvider.getAllLines();
 			if (!lines.isEmpty() && isStandardProps(lines)) {
-				loadStandardProps(filename);
+				loadStandardProps(configurationDataProvider);
 			} else {
 				parseContext(lines, DEFAULT_CONTEXT);
 				parseContext(lines, context);
 			}
 			parseVariables();
 		} catch (IOException e) {
-			throw new ConfigurationException("Unable to read configuration file", e);
+			throw new ConfigurationException("Unable to read configuration", e);
 		}
 	}
 
 	public Map<String, String> getConfiguration() {
 		return configuration;
-	}
-
-	private Collection<String> readLines(String filename) throws IOException {
-		return filename == null ? new ArrayList<String>() : Files.readAllLines(new File(filename).toPath(), Charset.forName("UTF-8"));
 	}
 
 	private Map<String, String> parseLine(String line) {
@@ -88,10 +74,9 @@ class Parser {
 		return true;
 	}
 
-	private void loadStandardProps(String filename) throws IOException {
+	private void loadStandardProps(ConfigurationDataProvider provider) throws IOException {
 		Properties props = new Properties();
-		InputStream input = new FileInputStream(filename);
-		props.load(input);
+		props.load(provider.getInputStream());
 		configuration.putAll(Utils.propertiesToMap(props));
 	}
 

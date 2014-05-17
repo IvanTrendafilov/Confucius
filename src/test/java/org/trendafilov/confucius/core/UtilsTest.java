@@ -16,17 +16,17 @@
 
 package org.trendafilov.confucius.core;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
-
-import java.util.Map;
-import java.util.Map.Entry;
-
 import org.junit.After;
 import org.junit.Test;
 import org.trendafilov.confucius.Configuration;
-import org.trendafilov.confucius.core.Utils;
+
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.util.Map;
+import java.util.Map.Entry;
+
+import static org.junit.Assert.*;
 
 public class UtilsTest {
 
@@ -48,6 +48,13 @@ public class UtilsTest {
 		for (Entry<String, String> entry : before.entrySet())
 			assertEquals(entry.getValue(), now.get(entry.getKey()));
 	}
+
+	@Test
+	public void testStreamToString() throws IOException {
+		InputStream inputStream = new ByteArrayInputStream("contents".getBytes("UTF-8"));
+		assertEquals("contents", Utils.streamToString(inputStream));
+	}
+
 
 	@After
 	public void tearDown() {

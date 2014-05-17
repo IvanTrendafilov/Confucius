@@ -16,15 +16,12 @@
 
 package org.trendafilov.confucius;
 
+import org.junit.Test;
+
+import java.io.*;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-
-import org.junit.Test;
 
 public class InjectableConfigurationTest {
 	private final static String TEST_CONTEXT = "Test2";
@@ -36,7 +33,7 @@ public class InjectableConfigurationTest {
 	}
 	
 	@Test
-	public void testTwoArgsConstructor() throws IOException {
+	public void testTwoArgsConstructorUsingFilename() throws IOException {
 		File temp = writeFile(true);
 		InjectableConfiguration config = new InjectableConfiguration(temp.getAbsolutePath(), TEST_CONTEXT);
 		assertFalse(config.keySet().isEmpty());
@@ -46,7 +43,18 @@ public class InjectableConfigurationTest {
 		assertEquals("value456", config.getStringValue("key456"));
 		temp.delete();
 	}
-	
+
+	@Test
+	public void testTwoArgsConstructorUsingInputStream() throws IOException {
+		StringBuilder conf = new StringBuilder("[Default]");
+		conf.append("\n");
+		conf.append("key123=value123");
+		InputStream inputStream = new ByteArrayInputStream(conf.toString().getBytes("UTF-8"));
+		InjectableConfiguration config = new InjectableConfiguration(inputStream, "Default");
+		assertFalse(config.keySet().isEmpty());
+		assertEquals("value123", config.getStringValue("key123"));
+	}
+
 	@Test
 	public void testTwoArgsConstructorWithoutContext() throws IOException {
 		File temp = writeFile(false);
