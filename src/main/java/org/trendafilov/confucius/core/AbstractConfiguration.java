@@ -16,17 +16,13 @@
 
 package org.trendafilov.confucius.core;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
-import java.util.Map.Entry;
-import java.util.Properties;
-import java.util.Set;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.trendafilov.confucius.Configurable;
+
+import java.io.InputStream;
+import java.util.*;
+import java.util.Map.Entry;
 
 public abstract class AbstractConfiguration implements Configurable {
 	private final static Logger LOG = LoggerFactory.getLogger(AbstractConfiguration.class);
@@ -35,24 +31,31 @@ public abstract class AbstractConfiguration implements Configurable {
 	protected static String FILE_PARAM = "conf.properties";
 	protected static String CONTEXT_PARAM = "conf.context";
 
-	private final String filePath;
+	private final ConfigurationDataProvider configurationDataProvider;
 	private final String context;
 	private final Map<String, String> initialState;
-	
+
 	public AbstractConfiguration() {
-		this.filePath = System.getProperty(FILE_PARAM);
+		this.configurationDataProvider = new FileConfigurationDataProvider(System.getProperty(FILE_PARAM));
 		this.context = System.getProperty(CONTEXT_PARAM);
 		this.initialState = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
 		init();
 	}
-	
+
 	public AbstractConfiguration(String filePath, String context) {
 		if (filePath == null)
 			throw new ConfigurationException("filePath cannot be null. Use no arg constructor instead.");
 		if (context != null)
 			setProperty(CONTEXT_PARAM, context);
 		setProperty(FILE_PARAM, filePath);
-		this.filePath = filePath;
+		this.configurationDataProvider = new FileConfigurationDataProvider(filePath);
+		this.context = context;
+		this.initialState = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
+		init();
+	}
+
+	public AbstractConfiguration(InputStream inputStream, String context) {
+		this.configurationDataProvider = new StreamConfigurationDataProvider(inputStream);
 		this.context = context;
 		this.initialState = Collections.unmodifiableMap(Utils.propertiesToMap(System.getProperties()));
 		init();
@@ -61,9 +64,9 @@ public abstract class AbstractConfiguration implements Configurable {
 	private void init() {
 		LOG.info("Initializing configuration...");
 		setProperties(initialState);
-		setProperties(new Parser(filePath, context).getConfiguration());
+		setProperties(new Parser(configurationDataProvider, context).getConfiguration());
 	}
-	
+
 	public synchronized Set<String> keySet() {
 		return Utils.propertiesToMap(getProperties()).keySet();
 	}
@@ -275,7 +278,7 @@ public abstract class AbstractConfiguration implements Configurable {
 
 	/**
 	 * {@inheritDoc}
-	 * 
+	 * <p/>
 	 * <p>
 	 * The reset procedure restores configuration properties to their initial
 	 * values at the time of creation of the <tt>Configurable</tt> instance.

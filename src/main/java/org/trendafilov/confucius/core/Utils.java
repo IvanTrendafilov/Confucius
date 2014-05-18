@@ -16,13 +16,20 @@
 
 package org.trendafilov.confucius.core;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.StringWriter;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
 
 class Utils {
-	private Utils() { }
-	
+	private static final int DEFAULT_BUFFER_SIZE = 1024 * 4;
+
+	private Utils() {
+	}
+
 	static Map<String, String> propertiesToMap(Properties props) {
 		Map<String, String> properties = new HashMap<>();
 		for (Object e : props.keySet()) {
@@ -32,4 +39,17 @@ class Utils {
 		}
 		return properties;
 	}
+
+	static String streamToString(InputStream input) throws IOException {
+		StringWriter output = new StringWriter();
+		InputStreamReader reader = new InputStreamReader(input, "UTF-8");
+
+		char[] buffer = new char[DEFAULT_BUFFER_SIZE];
+		int n = 0;
+		while (-1 != (n = reader.read(buffer))) {
+			output.write(buffer, 0, n);
+		}
+		return output.toString();
+	}
+
 }
