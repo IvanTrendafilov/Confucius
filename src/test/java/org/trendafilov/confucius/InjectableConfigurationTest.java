@@ -1,5 +1,5 @@
 /* 
- * Copyright 2013 Ivan Trendafilov
+ * Copyright 2013-2014 Ivan Trendafilov and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,18 @@
 
 package org.trendafilov.confucius;
 
-import org.junit.Test;
-
-import java.io.*;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+
+import java.io.BufferedWriter;
+import java.io.ByteArrayInputStream;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+
+import org.junit.After;
+import org.junit.Test;
 
 public class InjectableConfigurationTest {
 	private final static String TEST_CONTEXT = "Test2";
@@ -64,6 +70,12 @@ public class InjectableConfigurationTest {
 		assertEquals("value123", config.getStringValue("key123"));
 		assertEquals("value456", config.getStringValue("key456"));
 		temp.delete();
+	}
+	
+	@After
+	public void tearDown() {
+		System.clearProperty("conf.properties");
+		System.clearProperty("conf.context");
 	}
 	
 	private File writeFile(boolean hasContext) throws IOException {

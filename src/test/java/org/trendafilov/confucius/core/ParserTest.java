@@ -1,5 +1,5 @@
 /* 
- * Copyright 2013 Ivan Trendafilov
+ * Copyright 2013-2014 Ivan Trendafilov and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -226,7 +226,12 @@ public class ParserTest {
 		Map<String, String> configuration = new Parser(provider, TEST_CONTEXT).getConfiguration();
 		assertEquals("https://www.google.com/fp=dfc3525e9a3b356a&q=hello&safe=off/", configuration.get("key"));
 	}
-
+	
+	@After
+	public void tearDown() {
+		new File(FILENAME).delete();
+	}
+	
 	private void createFile(Map<String, String> defaultPairs, String contextName, Map<String, String> contextPairs) {
 		try {
 			PrintWriter writer = new PrintWriter(FILENAME, "UTF-8");
@@ -261,10 +266,5 @@ public class ParserTest {
 		for (int i = 0; i < args.length; i++)
 			map.put(args[i], args[++i]);
 		return map;
-	}
-
-	@After
-	public void tearDown() {
-		new File(FILENAME).delete();
 	}
 }

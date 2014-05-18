@@ -1,5 +1,5 @@
 /* 
- * Copyright 2013 Ivan Trendafilov
+ * Copyright 2013-2014 Ivan Trendafilov and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -349,5 +349,7 @@ public class ConfigurationTest {
 	@After
 	public void tearDown() {
 		config.reset();
+		System.clearProperty("conf.properties");
+		System.clearProperty("conf.context");
 	}
 }

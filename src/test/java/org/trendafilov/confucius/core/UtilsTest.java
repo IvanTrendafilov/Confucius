@@ -1,5 +1,5 @@
 /* 
- * Copyright 2013 Ivan Trendafilov
+ * Copyright 2013-2014 Ivan Trendafilov and contributors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,7 +54,6 @@ public class UtilsTest {
 		InputStream inputStream = new ByteArrayInputStream("contents".getBytes("UTF-8"));
 		assertEquals("contents", Utils.streamToString(inputStream));
 	}
-
 
 	@After
 	public void tearDown() {

@@ -7,7 +7,7 @@ Why use Confucius?
 ------------------
 
 * a __fluent API__ to access key-value pairs, as well as lists
-* __meticulously tested__ - with 74 test cases and __97% branch coverage__
+* __meticulously tested__ - with 84 test cases and __97% branch coverage__
 * support for a powerful __context-based Properties file format__
 * support for the __standard Java Properties file format__
 * __automatically load__ configuration from a specified Properties file
@@ -181,3 +181,8 @@ Support, questions, contributions
 ---------------------------------
 
 Please open a ticket and we will discuss. 
+
+Contributors
+------------
+
+* Bartłomiej Dudała @bartlomiej-dudala. Work on support for InputStreams in InjectableConfiguration.
