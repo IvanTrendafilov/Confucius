@@ -346,6 +346,45 @@ public class ConfigurationTest {
 		assertEquals("!!", config.getStringValue(TEST_KEY, "!!"));
 	}
 
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableLong() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getLongValue(TEST_KEY);
+		config.getLongValue(TEST_KEY, 923954957346L);
+	}
+
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableLongList() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getLongList(TEST_KEY);
+	}
+
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableShort() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getShortValue(TEST_KEY);
+		config.getShortValue(TEST_KEY, (short)123);
+	}
+
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableShortList() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getShortList(TEST_KEY);
+	}
+
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableByte() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getByteValue(TEST_KEY);
+		config.getByteValue(TEST_KEY, (byte)5);
+	}
+
+	@Test(expected = NumberFormatException.class)
+	public void testNotParsableByteList() {
+		config.setProperty(TEST_KEY, "empty");
+		config.getByteList(TEST_KEY);
+	}
+
 	@After
 	public void tearDown() {
 		config.reset();
