@@ -92,19 +92,31 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public byte getByteValue(String key) {
-		return Byte.parseByte(getKey(key));
+		try {
+			return Byte.parseByte(getKey(key));
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable byte", key));
+		}
 	}
 
 	public synchronized byte getByteValue(String key, byte defaultValue) {
 		String value = System.getProperty(key);
-		return value == null ? defaultValue : Byte.parseByte(value);
+		try {
+			return value == null ? defaultValue : Byte.parseByte(value);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable byte", key));
+		}
 	}
 
 	public List<Byte> getByteList(String key, String separator) {
 		List<Byte> parts = new ArrayList<>();
-		for (String value : getKey(key).split(separator))
-			parts.add(Byte.parseByte(value.trim()));
-		return parts;
+		try {
+			for (String value : getKey(key).split(separator))
+				parts.add(Byte.parseByte(value.trim()));
+			return parts;
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable byte", key));
+		}
 	}
 
 	public List<Byte> getByteList(String key) {
@@ -192,19 +204,31 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public long getLongValue(String key) {
-		return Long.parseLong(getKey(key));
+		try {
+			return Long.parseLong(getKey(key));
+		} catch (NumberFormatException e) {
+		        throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable long", key));
+		}
 	}
 
 	public synchronized long getLongValue(String key, long defaultValue) {
 		String value = System.getProperty(key);
-		return value == null ? defaultValue : Long.parseLong(value);
+		try {
+			return value == null ? defaultValue : Long.parseLong(value);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable long", key));
+		}
 	}
 
 	public List<Long> getLongList(String key, String separator) {
 		List<Long> parts = new ArrayList<>();
-		for (String value : getKey(key).split(separator))
-			parts.add(Long.parseLong(value.trim()));
-		return parts;
+		try {
+			for (String value : getKey(key).split(separator))
+				parts.add(Long.parseLong(value.trim()));
+			return parts;
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable long", key));
+		}
 	}
 
 	public List<Long> getLongList(String key) {
@@ -212,19 +236,31 @@ public abstract class AbstractConfiguration implements Configurable {
 	}
 
 	public short getShortValue(String key) {
-		return Short.parseShort(getKey(key));
+		try {
+			return Short.parseShort(getKey(key));
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable short", key));
+		}
 	}
 
 	public synchronized short getShortValue(String key, short defaultValue) {
 		String value = System.getProperty(key);
-		return value == null ? defaultValue : Short.parseShort(value);
+		try {
+			return value == null ? defaultValue : Short.parseShort(value);
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable short", key));
+		}
 	}
 
 	public List<Short> getShortList(String key, String separator) {
 		List<Short> parts = new ArrayList<>();
-		for (String value : getKey(key).split(separator))
-			parts.add(Short.parseShort(value.trim()));
-		return parts;
+		try {
+			for (String value : getKey(key).split(separator))
+				parts.add(Short.parseShort(value.trim()));
+			return parts;
+		} catch (NumberFormatException e) {
+			throw new NumberFormatException(String.format("Configuration value [%s] is not a parsable short", key));
+		}
 	}
 
 	public List<Short> getShortList(String key) {
