@@ -20,7 +20,7 @@ Getting started
 
 Four steps are required to get started with Confucius.
 
-First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or [manually download](http://search.maven.org/#browse%7C849733432), if need be):
+First, you need the Confucius jar file on your classpath. Confucius is available from Maven Central, so add to your `pom.xml` (or [manually download](http://repo1.maven.org/maven2/org/trendafilov/confucius/confucius/1.2.2/), if need be):
 
 ```xml
     <dependency>
