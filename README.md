@@ -109,9 +109,6 @@ A: Confucius exposes logging via SLF4J. To enable it, please place the desired b
 __Q: I want to inject a `Configurable` instance via a dependency injection framework. How do I do this correctly?__  
 A: DI containers should control the scope of the `Configurable` singleton. Therefore, please wire the `InjectableConfiguration` object instead of `Configuration` with your DI framework of choice.
 
-__Q: I am getting a `Unsupported major.minor version 51.0` exception. Why__?  
-A: Confucius is written in Java 7, so it requires at least JVM 7. Support for legacy versions is currently not planned (unless you want to write and support them!), keeping in mind that earlier Java versions are marked as EOL by Oracle.
-
 __Q: Please summarise how context-based Properties files work?__  
 A: At a minimum, you must specify a `Default` context section. Its contents are always processed and are processed first. Each context section contains a list of key-value pairs. Additional contexts may be defined - if so, you should specify which context should be processed via the `conf.context` property. Please note - the values of keys which already exist in `Default` will be overriden. Furthermore, it is possible to define variable substitutions, including substitutions which span the `Default` and the user-specified context.
 
